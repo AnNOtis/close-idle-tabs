@@ -1,8 +1,10 @@
 import pify from 'pify'
 
+const IDLE_TIME = 5 * 1000 * 60
 const tabsActivityRecord = {}
 window.tabsActivityRecord = tabsActivityRecord
 
+chrome.browserAction.setBadgeBackgroundColor({color: "#333"})
 getAllTabs().then(registTabs)
 
 chrome.management.onEnabled.addListener(() => {
@@ -10,19 +12,23 @@ chrome.management.onEnabled.addListener(() => {
 })
 
 chrome.tabs.onActivated.addListener(info => {
-  recordTabActivity(info.id)
+  recordTabActivity(info.tabId)
+  updateBadge()
 })
 
 chrome.tabs.onCreated.addListener(info => {
-  recordTabActivity(info.id)
+  recordTabActivity(info.tabId)
+  updateBadge()
 })
 
 chrome.tabs.onRemoved.addListener(info => {
-  removeTab(info.id)
+  removeTabRecord(info.tabId)
+  updateBadge()
 })
 
 chrome.browserAction.onClicked.addListener(() => {
-  closeIdleTabs()
+  closeUnwantedTabs()
+    .then(updateBadge)
 })
 
 function recordTabActivity(id) {
@@ -36,17 +42,31 @@ function registTabs (tabs) {
     .forEach(recordTabActivity)
 }
 
-function removeTab(id) {
+function removeTabRecord(id) {
   delete tabsActivityRecord[id]
 }
 
-window.closeIdleTabs = closeIdleTabs
-function closeIdleTabs () {
-  getAllTabs()
-    .then(dropWantedTab)
-    .then(dropIfActivedIn())
+window.closeUnwantedTabs = closeUnwantedTabs
+function closeUnwantedTabs () {
+  return unwantedTabs()
     .then(tap('removeTabs:'))
     .then(tabs => chrome.tabs.remove(tabs.map(tab => tab.id)))
+}
+
+function updateBadge() {
+  return wantedTabs()
+    .then(tap('updateBadge:'))
+    .then(tabs => {
+      chrome.browserAction.setBadgeText({text: tabs.length.toString()})
+    })
+}
+
+function unwantedTabs () {
+  return getAllTabs().then(getUnwantedTabs)
+}
+
+function wantedTabs () {
+  return getAllTabs().then(getWantedTabs)
 }
 
 function getAllTabs() {
@@ -61,19 +81,21 @@ function getAllTabs() {
   })
 }
 
-function dropWantedTab (tabs) {
-  return tabs.filter(tab => !tab.active && !tab.highlighted && !tab.pinned)
+function getUnwantedTabs (tabs) {
+  return tabs.filter(tab => !isCandidate(tab) && !isFreshTab(tab))
 }
 
-function dropIfActivedIn (time = 5 * 60 * 1000) {
-  return tabs => tabs.filter(tab => {
-    return (
-      tabsActivityRecord[tab.id] &&
-      (new Date() - tabsActivityRecord[tab.id].lastActivedAt) > time
-    )
-  })
+function getWantedTabs (tabs) {
+  return tabs.filter(tab => isCandidate(tab) || isFreshTab(tab))
 }
 
+function isCandidate (tab) {
+  return tab.active || tab.highlighted || tab.pinned
+}
+
+function isFreshTab(tab) {
+  return (new Date() - tabsActivityRecord[tab.id].lastActivedAt) < IDLE_TIME
+}
 
 function tap(title = 'tap') {
   return (v) => {

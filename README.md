@@ -23,6 +23,6 @@ yarn run build
 - Options Page
   - [ ] idle time config
 - Browser Action
-  - [ ] icon
-  - [ ] badge: displaying idle tabs count
+  - [x] icon
+  - [x] badge: displaying idle tabs count
   - [ ] popup page: displaying tabs with idle info & a big button to close idle tabs
