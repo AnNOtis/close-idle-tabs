@@ -1,11 +1,17 @@
 {
   "name": "Close Idle Tabs",
+  "icons": {
+    "128": "assets/logo-128x128.png"
+  },
   "options_page": "options.html",
   "background": {
     "page": "background.html"
   },
   "browser_action": {
-    "default_title": "Close tabs idle for 5 minutes"
+    "default_title": "Close tabs idle for 5 minutes",
+    "default_icon": {
+      "32": "assets/logo-32x32.png"
+    }
   },
   "permissions": ["management"],
   "manifest_version": 2,
