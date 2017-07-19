@@ -5,7 +5,8 @@
   },
   "options_page": "options.html",
   "background": {
-    "page": "background.html"
+    "page": "background.html",
+    "persistent": true
   },
   "browser_action": {
     "default_title": "Close tabs idle for 5 minutes",

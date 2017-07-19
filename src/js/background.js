@@ -14,7 +14,8 @@ let activeDurationTimemer
 chrome.tabs.onActivated.addListener(info => {
   if (activeDurationTimemer) { clearTimeout(activeDurationTimemer) }
   activeDurationTimemer = setTimeout(() => {
-    recordTabActivity(info.tabId)
+    const tabID = info.tabId
+    recordTabActivity(tabID)
   }, ACTIVE_DURATION_THRESHOLD)
 })
 
@@ -74,20 +75,32 @@ function getAllTabs() {
   return new Promise(function (resolve, reject) {
     try {
       chrome.tabs.query({}, tabs => {
-        resolve(tabs)
+        resolve(mixActivityData(tabs))
       })
     } catch (e) {
       reject(e)
     }
   })
+
+  function mixActivityData(tabs) {
+    return tabs.map(tab => ({
+      ...tab,
+      lastActivedAt:
+        tabsActivityRecord[tab.id] && tabsActivityRecord[tab.id].lastActivedAt
+    }))
+  }
 }
 
 function getUnwantedTabs (tabs) {
-  return tabs.filter(tab => !isCandidate(tab) && !isFreshTab(tab))
+  return tabs.filter(tab => !isWantedTab(tab))
 }
 
 function getWantedTabs (tabs) {
-  return tabs.filter(tab => isCandidate(tab) || isFreshTab(tab))
+  return tabs.filter(isWantedTab)
+}
+
+function isWantedTab (tab) {
+  return isCandidate(tab) || isFreshTab(tab)
 }
 
 function isCandidate (tab) {
@@ -95,8 +108,21 @@ function isCandidate (tab) {
 }
 
 function isFreshTab(tab) {
-  return tabsActivityRecord[tab.id] &&
-    (new Date() - tabsActivityRecord[tab.id].lastActivedAt) < IDLE_TIME
+  return tab.lastActivedAt && (new Date() - tab.lastActivedAt) < IDLE_TIME
+}
+
+window.getPopupPageData = getPopupPageData
+function getPopupPageData () {
+  return getAllTabs()
+    .then(tabs => tabs.sort((a, b) => a.lastActivedAt > b.lastActivedAt))
+    .then(tabs => tabs.reduce((result, tab) => {
+      if (isWantedTab(tab)) {
+        result.wantedTabs.push(tab)
+      } else {
+        result.unwantedTabs.push(tab)
+      }
+      return result
+    }, {unwantedTabs: [], wantedTabs: []}))
 }
 
 function tap(title = 'tap') {
