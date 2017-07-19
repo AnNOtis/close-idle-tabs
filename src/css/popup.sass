@@ -1,0 +1,119 @@
+@import "reset.css"
+
+$yellow: #FFDB72
+$yellow-d: #FDC627
+
+$white: #FFFFFF
+$white-d: #F7F9FA
+
+$black: #333
+$grey: #777
+$grey-l: #aaa
+
+body
+  width: 300px
+  background-color: $white-d
+  font-family: source code pro
+  color: $black
+
+  // for development
+  // border: 1px solid #666
+  // border-radius: 4px
+
+.container
+  display: block !important
+  background-color: $white
+  padding: 16px
+
+.header
+
+.activeTabs
+
+.stateHeader
+  font-size: 12px
+  color: $grey-l
+  border-bottom: 1px solid #eee
+  line-height: 18px
+  padding-left: 4px
+  // font-weight: lighter
+  margin-bottom: 6px
+
+.tab
+  padding: 6px
+
+.tab-favicon
+  float: left
+  width: 16px
+  height: 16px
+  margin-right: 6px
+
+.tab-info
+  overflow: auto
+
+.tab-info-title
+  font-size: 14px
+  line-height: 16px
+  white-space: nowrap
+  overflow: hidden
+  color: $grey
+
+.tab-info-state
+  font-size: 12px
+  font-style: italic
+  color: $grey-l
+  font-weight: lighter
+  line-height: 16px
+
+.inactiveTabs
+  font-size: 12px
+  font-style: italic
+  color: $grey
+  padding: 16px
+  text-align: center
+
+  strong
+    font-weight: bold
+    color: $black
+
+.btn
+  position: relative
+  width: 100%
+  background-color: $yellow
+  border: none
+  border-radius: 4px
+  font-family: source code pro
+  cursor: pointer
+  box-shadow: 0 1px 0 1px $yellow-d
+  outline: none
+  padding: 6px
+
+  &:hover
+    top: -1px
+    box-shadow: 0 2px 0 1px $yellow-d
+
+  &:active
+    top: 1px
+    box-shadow: 0 0 0 1px $yellow-d
+
+.btn-content
+  font-size: 20px
+  line-height: 28px
+
+.btn-hint
+  font-size: 12px
+  color: lighten($black, 10%)
+
+footer
+  text-align: center
+  background-color: $white-d
+  font-size: 12px
+  color: $grey
+  line-height: 32px
+  a
+    color: $black
+    font-weight: bold
+
+.footer-logo
+  width: 16px
+  height: 16px
+  vertical-align: text-bottom;

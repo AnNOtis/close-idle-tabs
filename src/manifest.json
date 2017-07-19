@@ -9,6 +9,7 @@
   },
   "browser_action": {
     "default_title": "Close tabs idle for 5 minutes",
+    "default_popup": "popup.html",
     "default_icon": {
       "32": "assets/logo-32x32.png"
     }
