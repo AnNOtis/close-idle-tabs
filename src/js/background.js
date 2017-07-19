@@ -1,6 +1,5 @@
-import pify from 'pify'
-
 const IDLE_TIME = 5 * 1000 * 60
+const ACTIVE_DURATION_THRESHOLD = 3000 // 3 seconds
 const tabsActivityRecord = {}
 window.tabsActivityRecord = tabsActivityRecord
 
@@ -11,19 +10,20 @@ chrome.management.onEnabled.addListener(() => {
   getAllTabs().then(registTabs)
 })
 
+let activeDurationTimemer
 chrome.tabs.onActivated.addListener(info => {
-  recordTabActivity(info.tabId)
-  updateBadge()
+  if (activeDurationTimemer) { clearTimeout(activeDurationTimemer) }
+  activeDurationTimemer = setTimeout(() => {
+    recordTabActivity(info.tabId)
+  }, ACTIVE_DURATION_THRESHOLD)
 })
 
 chrome.tabs.onCreated.addListener(info => {
   recordTabActivity(info.tabId)
-  updateBadge()
 })
 
 chrome.tabs.onRemoved.addListener(info => {
   removeTabRecord(info.tabId)
-  updateBadge()
 })
 
 chrome.browserAction.onClicked.addListener(() => {
@@ -33,6 +33,7 @@ chrome.browserAction.onClicked.addListener(() => {
 
 function recordTabActivity(id) {
   tabsActivityRecord[id] = { lastActivedAt: new Date() }
+  updateBadge()
 }
 
 function registTabs (tabs) {
@@ -94,7 +95,8 @@ function isCandidate (tab) {
 }
 
 function isFreshTab(tab) {
-  return (new Date() - tabsActivityRecord[tab.id].lastActivedAt) < IDLE_TIME
+  return tabsActivityRecord[tab.id] &&
+    (new Date() - tabsActivityRecord[tab.id].lastActivedAt) < IDLE_TIME
 }
 
 function tap(title = 'tap') {
