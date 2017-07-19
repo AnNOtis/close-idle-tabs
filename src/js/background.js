@@ -13,10 +13,11 @@ chrome.management.onEnabled.addListener(() => {
 let activeDurationTimemer
 chrome.tabs.onActivated.addListener(info => {
   if (activeDurationTimemer) { clearTimeout(activeDurationTimemer) }
-  activeDurationTimemer = setTimeout(() => {
-    const tabID = info.tabId
-    recordTabActivity(tabID)
-  }, ACTIVE_DURATION_THRESHOLD)
+  ((tabID) => {
+    activeDurationTimemer = setTimeout(() => {
+      recordTabActivity(tabID)
+    }, ACTIVE_DURATION_THRESHOLD)
+  })(info.tabId)
 })
 
 chrome.tabs.onCreated.addListener(info => {
