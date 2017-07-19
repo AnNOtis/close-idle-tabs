@@ -15,5 +15,9 @@
     "webpack-dev-server": "^2.3.0",
     "write-file-webpack-plugin": "3.4.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "extract-text-webpack-plugin": "2.1.2",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.6"
+  }
 }

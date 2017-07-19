@@ -3,7 +3,8 @@ var webpack = require("webpack"),
     fileSystem = require("fs"),
     env = require("./utils/env"),
     HtmlWebpackPlugin = require("html-webpack-plugin"),
-    WriteFilePlugin = require("write-file-webpack-plugin");
+    WriteFilePlugin = require("write-file-webpack-plugin"),
+    ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // load the secrets
 var alias = {};
@@ -26,7 +27,15 @@ var options = {
   },
   module: {
     rules: [
-      { test: /\.css$/, loader: "style-loader!css-loader", exclude: /node_modules/  }
+      { test: /\.css$/, loader: "style-loader!css-loader", exclude: /node_modules/  },
+      {
+        test: /\.sass$/,
+        exclude: /node_modules/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'sass-loader']
+        })
+      }
     ]
   },
   resolve: {
@@ -52,7 +61,8 @@ var options = {
       filename: "background.html",
       chunks: ["background"]
     }),
-    new WriteFilePlugin()
+    new WriteFilePlugin(),
+    new ExtractTextPlugin('[name].css')
   ]
 };
 
