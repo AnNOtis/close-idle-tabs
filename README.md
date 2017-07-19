@@ -22,6 +22,8 @@ yarn run build
 
 ## TODOs
 
+- improve activity detext
+  - [ ] add thresdhold
 - Options Page
   - [ ] idle time config
 - Browser Action

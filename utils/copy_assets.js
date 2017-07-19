@@ -1,5 +1,9 @@
 var fileSystem = require("fs-extra"),
-    path = require("path"),
-    env = require("./env");
+    path = require("path")
 
-fileSystem.copySync('src/assets', 'build/assets');
+var sourceDir = path.join(__dirname, '../src/assets'),
+    destDir = path.join(__dirname, '../build/assets')
+
+if (fileSystem.existsSync(sourceDir)) {
+  fileSystem.copySync(sourceDir, destDir);
+}
