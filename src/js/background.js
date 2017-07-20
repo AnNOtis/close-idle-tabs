@@ -35,7 +35,6 @@ chrome.browserAction.onClicked.addListener(() => {
 
 function recordTabActivity(id) {
   tabsActivityRecord[id] = { lastActivedAt: new Date() }
-  updateBadge()
 }
 
 function registTabs (tabs) {
@@ -115,7 +114,7 @@ function isFreshTab(tab) {
 window.getPopupPageData = getPopupPageData
 function getPopupPageData () {
   return getAllTabs()
-    .then(tabs => tabs.sort((a, b) => a.lastActivedAt > b.lastActivedAt))
+    .then(tabs => tabs.sort((a, b) => b.lastActivedAt - a.lastActivedAt))
     .then(tabs => tabs.reduce((result, tab) => {
       if (isWantedTab(tab)) {
         result.wantedTabs.push(tab)
@@ -123,7 +122,7 @@ function getPopupPageData () {
         result.unwantedTabs.push(tab)
       }
       return result
-    }, {unwantedTabs: [], wantedTabs: []}))
+    }, {IDLE_TIME, ACTIVE_DURATION_THRESHOLD, unwantedTabs: [], wantedTabs: []}))
 }
 
 function tap(title = 'tap') {
