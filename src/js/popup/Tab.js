@@ -1,12 +1,32 @@
 import { h, Component } from 'preact'
 import { humanDuration } from '../utils'
+import cx from 'classnames'
 
 const UNKNOW_FAVICON = '/assets/chrom-internal-icon.png'
 
 class Tab extends Component {
-  render ({tab}) {
+  constructor () {
+    super()
+    this.handleClick = this.handleClick.bind(this)
+  }
+
+  componentDidMount () {
+    this._timer = setInterval(() => {
+      this.setState({ currentTime: new Date() })
+    }, 1000)
+  }
+
+  componentWillUnmount () {
+    clearInterval(this._timer)
+  }
+
+  render ({tab, onClick}) {
     return (
-      <div class='tab'>
+      <div
+        title={tab.title}
+        class={cx('tab', {'tab--current': tab.active})}
+        onClick={this.handleClick}
+      >
         <img class='tab-favicon' src={this.favicon(tab)} />
         <div class='tab-info'>
           <div class='tab-info-title'>{tab.title}</div>
@@ -14,6 +34,12 @@ class Tab extends Component {
         </div>
       </div>
     )
+  }
+
+  handleClick () {
+    const tab = this.props.tab
+
+    chrome.tabs.highlight({tabs: tab.index, windowId: tab.windowId})
   }
 
   favicon (tab) {
@@ -30,7 +56,7 @@ class Tab extends Component {
     } else if (tab.active) {
       return 'active now'
     } else {
-      return `actived ${humanDuration(new Date() - tab.lastActivedAt)} ago`
+      return `actived ${humanDuration(this.state.currentTime - tab.lastActivedAt)} ago`
     }
   }
 }

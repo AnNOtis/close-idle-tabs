@@ -41,7 +41,25 @@ body
   margin-bottom: 6px
 
 .tab
-  padding: 6px
+  position: relative
+  padding: 10px 6px
+  border-radius: 4px
+  cursor: pointer
+
+  &:not(.tab--current)
+    &:hover
+      top: -1px
+      box-shadow: 0 1px 0 2px #EEE
+
+    &:active
+      top: 0px
+      box-shadow: 0 0 0 1px #EEE
+
+.tab.tab--current
+  &:hover
+    cursor: default
+    top: 0px
+    box-shadow: 0 0 0 1px #EEE
 
 .tab-favicon
   float: left
@@ -54,7 +72,6 @@ body
 
 .tab-info-title
   font-size: 12px
-  line-height: 16px
   white-space: nowrap
   overflow: hidden
   color: $grey

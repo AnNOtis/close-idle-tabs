@@ -27,6 +27,7 @@
     "babel-eslint": "^7.2.3",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
+    "classnames": "^2.2.5",
     "eslint-config-standard-jsx": "^4.0.2",
     "extract-text-webpack-plugin": "2.1.2",
     "node-sass": "^4.5.3",
