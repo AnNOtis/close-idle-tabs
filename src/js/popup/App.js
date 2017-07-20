@@ -3,6 +3,10 @@ import Header from './Header'
 import Main from './Main'
 
 class App extends Component {
+  constructor () {
+    super()
+    this.refetch = this.refetch.bind(this)
+  }
   componentDidMount () {
     this.intervalfetchData()
   }
@@ -12,17 +16,21 @@ class App extends Component {
   }
 
   render (_, {data}) {
+    if (!data) return <div>loading...</div>
+
     return (
-      !data
-        ? <div>loading...</div>
-        : <div>
-          <Header wantedTabs={data.wantedTabs} />
-          <Main
-            idleTime={data.IDLE_TIME}
-            unwantedTabs={data.unwantedTabs}
-            wantedTabs={data.wantedTabs}
-          />
-        </div>
+      <div>
+        <Header
+          wantedTabs={data.wantedTabs}
+          unwantedTabs={data.unwantedTabs}
+          onRefetch={this.refetch}
+        />
+        <Main
+          idleTime={data.IDLE_TIME}
+          unwantedTabs={data.unwantedTabs}
+          wantedTabs={data.wantedTabs}
+        />
+      </div>
     )
   }
 
@@ -39,6 +47,11 @@ class App extends Component {
 
   clearFetchDataTimer () {
     clearInterval(this._timer)
+  }
+
+  refetch() {
+    return this.fetchData()
+      .then(data => this.setState({ data }))
   }
 
   fetchData () {

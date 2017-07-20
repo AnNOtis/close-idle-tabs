@@ -27,10 +27,6 @@ body
   background-color: $white
   padding: 16px
 
-.header
-
-.activeTabs
-
 .stateHeader
   @extend .font-header
   font-size: 12px
@@ -59,7 +55,7 @@ body
   &:hover
     cursor: default
     top: 0px
-    box-shadow: 0 0 0 1px #EEE
+    box-shadow: none
 
 .tab-favicon
   float: left
@@ -107,13 +103,20 @@ body
   outline: none
   padding: 14px 0
 
-  &:hover
-    top: -1px
-    box-shadow: 0 2px 0 1px $yellow-d
+  &:not(.btn--disable)
+    &:hover
+      top: -1px
+      box-shadow: 0 2px 0 1px $yellow-d
 
-  &:active
-    top: 1px
-    box-shadow: 0 0 0 1px $yellow-d
+    &:active
+      top: 1px
+      box-shadow: 0 0 0 1px $yellow-d
+
+.btn.btn--disable
+  background-color: $white-d
+  border: 2px solid $grey-l
+  box-shadow: none
+  cursor: default
 
 .btn-content
   font-size: 20px
@@ -131,6 +134,7 @@ footer
   font-size: 12px
   color: $grey
   line-height: 32px
+  box-shadow: 0 2px 2px -2px $grey-l inset
   a
     color: $black
     font-weight: bold

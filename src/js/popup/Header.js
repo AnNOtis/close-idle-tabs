@@ -1,20 +1,46 @@
 import { h, Component } from 'preact'
 import { maybePlural } from '../utils'
 
-const Button = ({ children, ...props }) => {
-  const wantedTabCount = props.wantedTabs.length
-  return (
-    <button class='btn'>
-      <div class='btn-content'>Close Idle Tabs</div>
-      <div class='btn-hint'>
-        leave {wantedTabCount} active {maybePlural(wantedTabCount, 'tab')}
-      </div>
-    </button>
-  )
+class Button extends Component {
+  constructor () {
+    super()
+    this.handleClick = this.handleClick.bind(this)
+  }
+
+  render (props) {
+    console.log(props);
+    const unwantedTabCount = props.unwantedTabs.length
+    const wantedTabCount = props.wantedTabs.length
+
+    if (!unwantedTabCount) {
+      return <button class='btn btn--disable'>
+        <div class='btn-content'>No Idle Tabs</div>
+      </button>
+    }
+
+    return (
+      <button class='btn' onClick={this.handleClick}>
+        <div class='btn-content'>Close Idle Tabs</div>
+        <div class='btn-hint'>
+          leave {wantedTabCount} active {maybePlural(wantedTabCount, 'tab')}
+        </div>
+      </button>
+    )
+  }
+
+  handleClick () {
+    chrome.extension.getBackgroundPage().closeUnwantedTabs()
+    this.props.onClick()
+  }
 }
+
 class Header extends Component {
-  render ({wantedTabs}) {
-    return <div class='header'><Button wantedTabs={wantedTabs} /></div>
+  render ({unwantedTabs, wantedTabs, onRefetch}) {
+    return (
+      <div class='header'>
+        <Button unwantedTabs={unwantedTabs} wantedTabs={wantedTabs} onClick={onRefetch} />
+      </div>
+    )
   }
 }
 

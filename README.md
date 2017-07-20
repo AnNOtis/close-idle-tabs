@@ -22,11 +22,13 @@ yarn run build
 
 ## TODOs
 
-- improve activity detext
-  - [ ] add thresdhold
+- improve activity detect
+  - [x] add thresdhold
+  - [ ] treat new tab as idle tab
+  - [ ] calculate differet window in seperated queue
 - Options Page
   - [ ] idle time config
 - Browser Action
   - [x] icon
   - [x] badge: displaying idle tabs count
-  - [ ] popup page: displaying tabs with idle info & a big button to close idle tabs
+  - [x] popup page: displaying tabs with idle info & a big button to close idle tabs
