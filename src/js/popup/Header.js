@@ -2,7 +2,6 @@ import { h, Component } from 'preact'
 import { maybePlural } from '../utils'
 
 const Button = ({ children, ...props }) => {
-  console.log(props);
   const wantedTabCount = props.wantedTabs.length
   return (
     <button class='btn'>

@@ -6,7 +6,7 @@ class App extends Component {
   render ({data}) {
     return <div>
       <Header wantedTabs={data.wantedTabs} />
-      <Main />
+      <Main idleTime={data.IDLE_TIME} unwantedTabs={data.unwantedTabs}/>
     </div>
   }
 }
