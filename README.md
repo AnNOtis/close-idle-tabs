@@ -6,7 +6,7 @@
   <p align="center">Press a button to close idle tabs</p>
 </p>
 
-## Demo
+## 
 
 <p>
 <img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/demo1.png" width="200" />
