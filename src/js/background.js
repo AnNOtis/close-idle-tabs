@@ -3,7 +3,7 @@ const ACTIVE_DURATION_THRESHOLD = 3000 // 3 seconds
 const tabsActivityRecord = {}
 window.tabsActivityRecord = tabsActivityRecord
 
-chrome.browserAction.setBadgeBackgroundColor({color: "#333"})
+chrome.browserAction.setBadgeBackgroundColor({color: '#333'})
 getAllTabs().then(registTabs)
 
 chrome.management.onEnabled.addListener(() => {
@@ -33,7 +33,7 @@ chrome.browserAction.onClicked.addListener(() => {
     .then(updateBadge)
 })
 
-function recordTabActivity(id) {
+function recordTabActivity (id) {
   tabsActivityRecord[id] = { lastActivedAt: new Date() }
 }
 
@@ -44,7 +44,7 @@ function registTabs (tabs) {
     .forEach(recordTabActivity)
 }
 
-function removeTabRecord(id) {
+function removeTabRecord (id) {
   delete tabsActivityRecord[id]
 }
 
@@ -55,7 +55,7 @@ function closeUnwantedTabs () {
     .then(tabs => chrome.tabs.remove(tabs.map(tab => tab.id)))
 }
 
-function updateBadge() {
+function updateBadge () {
   return wantedTabs()
     .then(tap('updateBadge:'))
     .then(tabs => {
@@ -71,7 +71,7 @@ function wantedTabs () {
   return getAllTabs().then(getWantedTabs)
 }
 
-function getAllTabs() {
+function getAllTabs () {
   return new Promise(function (resolve, reject) {
     try {
       chrome.tabs.query({}, tabs => {
@@ -82,7 +82,7 @@ function getAllTabs() {
     }
   })
 
-  function mixActivityData(tabs) {
+  function mixActivityData (tabs) {
     return tabs.map(tab => ({
       ...tab,
       lastActivedAt:
@@ -107,7 +107,7 @@ function isCandidate (tab) {
   return tab.active || tab.highlighted || tab.pinned
 }
 
-function isFreshTab(tab) {
+function isFreshTab (tab) {
   return tab.lastActivedAt && (new Date() - tab.lastActivedAt) < IDLE_TIME
 }
 
@@ -125,7 +125,7 @@ function getPopupPageData () {
     }, {IDLE_TIME, ACTIVE_DURATION_THRESHOLD, unwantedTabs: [], wantedTabs: []}))
 }
 
-function tap(title = 'tap') {
+function tap (title = 'tap') {
   return (v) => {
     console.log(title, v)
     return v

@@ -1,11 +1,11 @@
-import "../css/popup.sass"
+import '../css/popup.sass'
 import App from './popup/App'
 import { h, render } from 'preact'
 
 window.bg = chrome.extension.getBackgroundPage()
 let _dataBuffer
 
-render(<App />, document.getElementById('container'));
+render(<App />, document.getElementById('container'))
 
 // init()
 //
@@ -24,7 +24,7 @@ function init () {
     })
 }
 
-function fetchData() {
+function fetchData () {
   return bg
     .getPopupPageData()
     .then(data => _dataBuffer = data)
@@ -47,7 +47,6 @@ function renderContent (data) {
 
   return result
 }
-
 
 function actionButton (data) {
   const wantedTabs = data.wantedTabs
@@ -73,12 +72,12 @@ function inactiveTabs (data) {
   `
 }
 
-function activeTabState(data) {
+function activeTabState (data) {
   return `<div class="stateHeader">Active Tabs (${data.wantedTabs.length})</div>`
 }
 
 function activeTabs (data) {
-  const sortedTabs = data.wantedTabs.sort((a,b) => {
+  const sortedTabs = data.wantedTabs.sort((a, b) => {
     if (a.pinned && b.pinned) return 0
     if (a.active && b.active) return 0
     if (a.pinned && !b.pinned) return -1
