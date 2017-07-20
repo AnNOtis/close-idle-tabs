@@ -27,7 +27,17 @@ var options = {
   },
   module: {
     rules: [
-      { test: /\.css$/, loader: "style-loader!css-loader", exclude: /node_modules/  },
+      {
+        // set up standard-loader as a preloader
+        enforce: 'pre',
+        test: /\.jsx?$/,
+        loader: 'standard-loader',
+        exclude: /(node_modules|bower_components)/,
+        options: {
+          parser: 'babel-eslint'
+        }
+      },
+      { test: /\.css$/, loader: "style-loader!css-loader", exclude: /node_modules/ },
       {
         test: /\.sass$/,
         exclude: /node_modules/,
