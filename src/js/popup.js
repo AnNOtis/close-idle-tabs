@@ -1,14 +1,19 @@
-import "../css/popup.sass";
+import "../css/popup.sass"
+import App from './popup/App'
+import { h, render } from 'preact'
+
 window.bg = chrome.extension.getBackgroundPage()
 let _dataBuffer
 
-init()
+render(<App />, document.getElementById('container'));
 
-document.addEventListener('click', function (event) {
-  if (event.target.classList.contains('btn')) {
-    alert('Yo!')
-  }
-});
+// init()
+//
+// document.addEventListener('click', function (event) {
+//   if (event.target.classList.contains('btn')) {
+//     alert('Yo!')
+//   }
+// });
 
 function init () {
   return fetchData()

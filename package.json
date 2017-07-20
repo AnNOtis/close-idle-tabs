@@ -20,8 +20,10 @@
   },
   "devDependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
     "extract-text-webpack-plugin": "2.1.2",
     "node-sass": "^4.5.3",
+    "preact": "^8.2.1",
     "sass-loader": "^6.0.6"
   }
 }
