@@ -2,5 +2,10 @@
   "plugins": [
     "transform-object-rest-spread",
     ["transform-react-jsx", { "pragma":"h" }]
+  ],
+  "presets": [
+    "env",
+    "@ava/stage-4",
+		"@ava/transform-test-files"
   ]
 }
