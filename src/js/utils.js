@@ -16,3 +16,23 @@ export function humanDuration (ms) {
     return `${s} ${maybePlural(s, 'second')}`
   }
 }
+
+// callback: function to be executed
+// interval: duration between each executions
+// delay: delay time before first excution
+export function interval (callback, interval, delay = 0) {
+  if (interval < 10) interval = 10
+
+  let initialTimer
+  let intervalTimer
+
+  initialTimer = setTimeout(() => {
+    callback()
+    intervalTimer = setInterval(callback, interval)
+  }, delay)
+
+  return () => {
+    if (initialTimer) clearTimeout(initialTimer)
+    if (intervalTimer) clearInterval(intervalTimer)
+  }
+}
