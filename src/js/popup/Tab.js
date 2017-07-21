@@ -56,6 +56,8 @@ class Tab extends Component {
     } else if (tab.active) {
       return 'active now'
     } else {
+      if (!tab.lastActivedAt) return ''
+
       return `actived at ${humanDuration(this.state.currentTime - tab.lastActivedAt)} ago`
     }
   }

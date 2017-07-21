@@ -1,18 +1,26 @@
 import { h, Component } from 'preact'
 import Header from './Header'
 import Main from './Main'
+import { interval } from '../utils'
+import { TAB_DATA_PORT } from '../background'
 
 class App extends Component {
   constructor () {
     super()
-    this.refetch = this.refetch.bind(this)
+    this.getData = this.getData.bind(this)
   }
+
   componentDidMount () {
-    this.intervalfetchData()
+    this.tabDataChannel = chrome.runtime.connect({name: TAB_DATA_PORT})
+    this.tabDataChannel.onMessage.addListener(data => {
+      this.setState({ data })
+    })
+    this._cancelFetchingData = interval(() => this.tabDataChannel.postMessage(), 2000)
   }
 
   componentWillUnmount () {
-    this.clearFetchDataTimer()
+    this._cancelFetchingData()
+    this.tabDataChannel.disconnect()
   }
 
   render (_, {data}) {
@@ -23,7 +31,7 @@ class App extends Component {
         <Header
           wantedTabs={data.wantedTabs}
           unwantedTabs={data.unwantedTabs}
-          onRefetch={this.refetch}
+          onRefetch={this.getData}
         />
         <Main
           idleTime={data.IDLE_TIME}
@@ -34,28 +42,8 @@ class App extends Component {
     )
   }
 
-  intervalfetchData () {
-    return this.fetchData()
-      .then(data => {
-        this.setState({ data })
-
-        this._timer = setTimeout(() => {
-          this.intervalfetchData()
-        }, 2000)
-      })
-  }
-
-  clearFetchDataTimer () {
-    clearInterval(this._timer)
-  }
-
-  refetch() {
-    return this.fetchData()
-      .then(data => this.setState({ data }))
-  }
-
-  fetchData () {
-    return chrome.extension.getBackgroundPage().getPopupPageData()
+  getData () {
+    this.tabDataChannel.postMessage()
   }
 }
 

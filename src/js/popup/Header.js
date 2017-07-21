@@ -8,7 +8,6 @@ class Button extends Component {
   }
 
   render (props) {
-    console.log(props);
     const unwantedTabCount = props.unwantedTabs.length
     const wantedTabCount = props.wantedTabs.length
 

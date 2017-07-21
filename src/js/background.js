@@ -1,40 +1,47 @@
+import { interval } from './utils'
 const IDLE_TIME = 5 * 1000 * 60
-const ACTIVE_DURATION_THRESHOLD = 3000 // 3 seconds
-const tabsActivityRecord = {}
+const DELAY_BEFORE_RECORD_ACTIVITY = 3000 // 3 seconds
+export const TAB_DATA_PORT = 'TAB_DATA_PORT'
+let tabsActivityRecord = {}
 window.tabsActivityRecord = tabsActivityRecord
+let _tabDataCannel
 
-chrome.browserAction.setBadgeBackgroundColor({color: '#333'})
-getAllTabs().then(registTabs)
+getAllTabs().then(registTabs).then(initActions)
 
-chrome.management.onEnabled.addListener(() => {
-  getAllTabs().then(registTabs)
+chrome.runtime.onConnect.addListener(function (port) {
+  if (port.name === TAB_DATA_PORT) {
+    _tabDataCannel = port
+    port.onMessage.addListener(pushTabData)
+  }
 })
 
-let activeDurationTimemer
-chrome.tabs.onActivated.addListener(info => {
-  if (activeDurationTimemer) { clearTimeout(activeDurationTimemer) }
-  ((tabID) => {
-    activeDurationTimemer = setTimeout(() => {
-      recordTabActivity(tabID)
-    }, ACTIVE_DURATION_THRESHOLD)
-  })(info.tabId)
-})
+function pushTabData () {
+  return getPopupPageData().then(data => {
+    _tabDataCannel && _tabDataCannel.postMessage(data)
+  })
+}
 
-chrome.tabs.onCreated.addListener(info => {
-  recordTabActivity(info.tabId)
-})
+function initActions () {
+  let _cancelTimer
+  chrome.tabs.onActivated.addListener(info => {
+    if (_cancelTimer) { _cancelTimer() }
+    _cancelTimer = interval(() => {
+      recordTabActivity(info.tabId)
+    }, 1000, DELAY_BEFORE_RECORD_ACTIVITY)
+  })
 
-chrome.tabs.onRemoved.addListener(info => {
-  removeTabRecord(info.tabId)
-})
+  chrome.tabs.onCreated.addListener(info => {
+    recordTabActivity(info.tabId)
+  })
 
-chrome.browserAction.onClicked.addListener(() => {
-  closeUnwantedTabs()
-    .then(updateBadge)
-})
+  chrome.tabs.onRemoved.addListener(info => {
+    removeTabRecord(info.tabId)
+  })
+}
 
 function recordTabActivity (id) {
-  tabsActivityRecord[id] = { lastActivedAt: new Date() }
+  tabsActivityRecord[id] = { lastActivedAt: Date.now() }
+  pushTabData()
 }
 
 function registTabs (tabs) {
@@ -46,6 +53,7 @@ function registTabs (tabs) {
 
 function removeTabRecord (id) {
   delete tabsActivityRecord[id]
+  pushTabData()
 }
 
 window.closeUnwantedTabs = closeUnwantedTabs
@@ -111,7 +119,6 @@ function isFreshTab (tab) {
   return tab.lastActivedAt && (new Date() - tab.lastActivedAt) < IDLE_TIME
 }
 
-window.getPopupPageData = getPopupPageData
 function getPopupPageData () {
   return getAllTabs()
     .then(tabs => tabs.sort((a, b) => b.lastActivedAt - a.lastActivedAt))
@@ -122,7 +129,7 @@ function getPopupPageData () {
         result.unwantedTabs.push(tab)
       }
       return result
-    }, {IDLE_TIME, ACTIVE_DURATION_THRESHOLD, unwantedTabs: [], wantedTabs: []}))
+    }, {IDLE_TIME, DELAY_BEFORE_RECORD_ACTIVITY, unwantedTabs: [], wantedTabs: []}))
 }
 
 function tap (title = 'tap') {
