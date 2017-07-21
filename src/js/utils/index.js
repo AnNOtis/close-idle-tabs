@@ -36,3 +36,6 @@ export function interval (callback, interval, delay = 0) {
     if (intervalTimer) clearInterval(intervalTimer)
   }
 }
+
+export function hub () {
+}

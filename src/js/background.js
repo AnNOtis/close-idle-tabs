@@ -1,23 +1,26 @@
-import { interval } from './utils'
+import { interval } from './utils/index'
+import Hub from './utils/hub'
 const IDLE_TIME = 5 * 1000 * 60
 const DELAY_BEFORE_RECORD_ACTIVITY = 3000 // 3 seconds
 export const TAB_DATA_PORT = 'TAB_DATA_PORT'
-let tabsActivityRecord = {}
-window.tabsActivityRecord = tabsActivityRecord
-let _tabDataCannel
+const tabsActivityRecord = {}
+const tabDataPubSub = new Hub()
 
 getAllTabs().then(registTabs).then(initActions)
 
 chrome.runtime.onConnect.addListener(function (port) {
   if (port.name === TAB_DATA_PORT) {
-    _tabDataCannel = port
+    const cancel = tabDataPubSub.subscribe(data => {
+      port.postMessage(data)
+    })
     port.onMessage.addListener(pushTabData)
+    port.onDisconnect.addListener(cancel)
   }
 })
 
 function pushTabData () {
   return getPopupPageData().then(data => {
-    _tabDataCannel && _tabDataCannel.postMessage(data)
+    tabDataPubSub.publish(data)
   })
 }
 

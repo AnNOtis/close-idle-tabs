@@ -1,5 +1,5 @@
 import { h, Component } from 'preact'
-import { humanDuration } from '../utils'
+import { humanDuration } from '../utils/index'
 import cx from 'classnames'
 
 const UNKNOW_FAVICON = '/assets/chrom-internal-icon.png'

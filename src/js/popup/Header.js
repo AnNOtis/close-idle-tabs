@@ -1,5 +1,5 @@
 import { h, Component } from 'preact'
-import { maybePlural } from '../utils'
+import { maybePlural } from '../utils/index'
 
 class Button extends Component {
   constructor () {

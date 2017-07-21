@@ -1,4 +1,4 @@
-import { interval } from '../../utils'
+import { interval } from '../../utils/index'
 import sinon from 'sinon'
 import test from 'ava'
 

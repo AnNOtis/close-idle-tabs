@@ -1,7 +1,7 @@
 import { h, Component } from 'preact'
 import Header from './Header'
 import Main from './Main'
-import { interval } from '../utils'
+import { interval } from '../utils/index'
 import { TAB_DATA_PORT } from '../background'
 
 class App extends Component {

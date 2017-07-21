@@ -1,5 +1,5 @@
 import { h, Component } from 'preact'
-import { maybePlural, humanDuration } from '../utils'
+import { maybePlural, humanDuration } from '../utils/index'
 
 class InactiveTabPreview extends Component {
   render ({ idleTime, unwantedTabs }) {
