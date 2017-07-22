@@ -2,32 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title></title>
 </head>
 <body>
-  <div id="impression" class="impression">
-    <img src="/assets/logo.png" alt="logo" class="impression-logo">
-    <div class="impression-line">Close</div>
-    <div class="impression-line">Idle</div>
-    <div class="impression-line">Tabs</div>
+  <div>
+    How long can tab be idle?
+    <select id="idle-time" style="float: right;">
+      <option value="5000">5 mins</option>
+      <option value="10000">10 mins</option>
+      <option value="30000">30 mins</option>
+      <option value="60000">1 hour</option>
+    </select>
   </div>
-  <div id="container" class="container">
-    <div class="option">
-      <div class="option-title">
-        How long can tab be idle?
-        <select class="option-select">
-          <option value="5000">5 mins</option>
-          <option value="10000">10 mins</option>
-          <option value="30000">30 mins</option>
-          <option value="60000">1 hour</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="control">
-      <button class="btn btn--cancel">cancel</button>
-      <button class="btn btn--save">Save</button>
-    </div>
+  <div style="margin-top: 50px; text-align: right; border-top: 1px solid #DDD; padding-top: 12px;">
+    <span id="hint"></span>
+    <button id="cancel">cancel</button>
+    <button id="save">Save</button>
   </div>
 </body>
 </html>
