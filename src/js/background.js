@@ -1,10 +1,10 @@
 import { interval } from './utils/index'
-import Hub from './utils/hub'
+import Ovv from 'ovv'
 const IDLE_TIME = 5 * 1000 * 60
 const DELAY_BEFORE_RECORD_ACTIVITY = 3000 // 3 seconds
 export const TAB_DATA_PORT = 'TAB_DATA_PORT'
 const tabsActivityRecord = {}
-const tabDataPubSub = new Hub()
+const tabDataPubSub = new Ovv()
 
 getAllTabs().then(registTabs).then(initActions)
 
