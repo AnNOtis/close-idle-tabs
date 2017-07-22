@@ -1,12 +1,28 @@
 import { interval } from './utils/index'
 import Ovv from 'ovv'
-const IDLE_TIME = 5 * 1000 * 60
-const DELAY_BEFORE_RECORD_ACTIVITY = 3000 // 3 seconds
+const config = {
+  IDLE_TIME: 5 * 1000 * 60,
+  DELAY_BEFORE_RECORD_ACTIVITY: 3000
+}
 export const TAB_DATA_PORT = 'TAB_DATA_PORT'
 const tabsActivityRecord = {}
 const tabDataPubSub = new Ovv()
 
-getAllTabs().then(registTabs).then(initActions)
+setupConfig()
+  .then(() => getAllTabs().then(registTabs).then(initActions))
+
+function setupConfig () {
+  return getStorage({idleTime: 5000})
+    .then(data => {
+      config.IDLE_TIME = data.idleTime
+
+      chrome.storage.onChanged.addListener((changes, namespace) => {
+        if (changes.idleTime) {
+          config.IDLE_TIME = changes.idleTime.newValue
+        }
+      })
+    })
+}
 
 chrome.runtime.onConnect.addListener(function (port) {
   if (port.name === TAB_DATA_PORT) {
@@ -30,7 +46,7 @@ function initActions () {
     if (_cancelTimer) { _cancelTimer() }
     _cancelTimer = interval(() => {
       recordTabActivity(info.tabId)
-    }, 1000, DELAY_BEFORE_RECORD_ACTIVITY)
+    }, 1000, config.DELAY_BEFORE_RECORD_ACTIVITY)
   })
 
   chrome.tabs.onCreated.addListener(info => {
@@ -119,7 +135,7 @@ function isCandidate (tab) {
 }
 
 function isFreshTab (tab) {
-  return tab.lastActivedAt && (new Date() - tab.lastActivedAt) < IDLE_TIME
+  return tab.lastActivedAt && (new Date() - tab.lastActivedAt) < config.IDLE_TIME
 }
 
 function getPopupPageData () {
@@ -132,7 +148,19 @@ function getPopupPageData () {
         result.unwantedTabs.push(tab)
       }
       return result
-    }, {IDLE_TIME, DELAY_BEFORE_RECORD_ACTIVITY, unwantedTabs: [], wantedTabs: []}))
+    }, { ...config, unwantedTabs: [], wantedTabs: []}))
+}
+
+function getStorage (target) {
+  return new Promise((resolve, reject) => {
+    try {
+      chrome.storage.sync.get(target, config => {
+        resolve(config)
+      })
+    } catch (e) {
+      reject(e)
+    }
+  })
 }
 
 function tap (title = 'tap') {

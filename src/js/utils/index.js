@@ -3,17 +3,16 @@ export function maybePlural (number, str) {
 }
 
 export function humanDuration (ms) {
-  const s = parseInt(ms / 1000)
-  if (s >= 60 * 60) {
-    const hour = parseInt(s / 3600)
+  if (!ms) return ''
+
+  if (ms >= 60 * 60 * 1000) {
+    const hour = parseInt(ms / 3600000)
     return `${hour} ${maybePlural(hour, 'hour')}`
-  } else if (s >= 60) {
-    const min = parseInt(s / 60)
+  } else if (ms >= 60000) {
+    const min = parseInt(ms / 60000)
     return `${min} ${maybePlural(min, 'min')}`
-  } else if (!s) {
-    return `now`
   } else {
-    return `${s} ${maybePlural(s, 'second')}`
+    return `${parseInt(ms / 1000)} ${maybePlural(ms / 1000, 'second')}`
   }
 }
 

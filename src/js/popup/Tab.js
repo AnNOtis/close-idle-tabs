@@ -54,11 +54,11 @@ class Tab extends Component {
     if (tab.pinned) {
       return 'pinned'
     } else if (tab.active) {
-      return 'active now'
+      return 'current'
     } else {
       if (!tab.lastActivedAt) return ''
 
-      return `actived at ${humanDuration(this.state.currentTime - tab.lastActivedAt)} ago`
+      return `${humanDuration(this.state.currentTime - tab.lastActivedAt)} ago`
     }
   }
 }

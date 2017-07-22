@@ -13,7 +13,7 @@ function saveOptions () {
 
 function restoreOptions () {
   chrome.storage.sync.get({
-    idleTime: 5000
+    idleTime: 5000 * 60
   }, function (items) {
     document.getElementById('idle-time').value = items.idleTime
   })
