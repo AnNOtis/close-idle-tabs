@@ -1,8 +1,10 @@
 import { interval } from './utils/index'
 import Ovv from 'ovv'
+const DEFAULT_IDLE_TIME = 5 * 1000 * 60
+const DEFAULT_DELAY_BEFORE_RECORD_ACTIVITY = 3000
 const config = {
-  IDLE_TIME: 5 * 1000 * 60,
-  DELAY_BEFORE_RECORD_ACTIVITY: 3000
+  IDLE_TIME: DEFAULT_IDLE_TIME,
+  DELAY_BEFORE_RECORD_ACTIVITY: DEFAULT_DELAY_BEFORE_RECORD_ACTIVITY
 }
 export const TAB_DATA_PORT = 'TAB_DATA_PORT'
 const tabsActivityRecord = {}
@@ -12,7 +14,7 @@ setupConfig()
   .then(() => getAllTabs().then(registTabs).then(initActions))
 
 function setupConfig () {
-  return getStorage({idleTime: 5000})
+  return getStorage({idleTime: DEFAULT_IDLE_TIME})
     .then(data => {
       config.IDLE_TIME = data.idleTime
 

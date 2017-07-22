@@ -8,7 +8,6 @@
 
 ##
 
-Download  from Github
 <p>
 <img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/demo1.png" width="200" />
 &nbsp;&nbsp;
@@ -37,6 +36,7 @@ yarn run build
   - [x] add thresdhold
   - [ ] treat new tab as idle tab
   - [ ] calculate differet window in seperated queue
+  - [ ] add shortcut
 - Options Page
   - [ ] idle time config
 - Browser Action
