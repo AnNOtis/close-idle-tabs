@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Press a button to close inactive tabs",
   "scripts": {
-    "build": "node utils/build.js",
+    "build": "NODE_ENV=production node utils/build.js",
     "start": "node utils/webserver.js",
     "test": "ava --color"
   },
