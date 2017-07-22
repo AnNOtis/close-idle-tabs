@@ -8,7 +8,6 @@
 
 ##
 
-Download  from Github
 <p>
 <img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/demo1.png" width="200" />
 &nbsp;&nbsp;
@@ -35,10 +34,12 @@ yarn run build
 
 - improve activity detect
   - [x] add thresdhold
-  - [ ] treat new tab as idle tab
+  - [ ] treat new tab as an idle tab
   - [ ] calculate differet window in seperated queue
+  - [ ] link popup page's minutes to options page
+  - [ ] improve ui to show inactive tabs
 - Options Page
-  - [ ] idle time config
+  - [x] idle time config
 - Browser Action
   - [x] icon
   - [x] badge: displaying idle tabs count
