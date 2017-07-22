@@ -5,5 +5,29 @@
   <title></title>
 </head>
 <body>
+  <div id="impression" class="impression">
+    <img src="/assets/logo.png" alt="logo" class="impression-logo">
+    <div class="impression-line">Close</div>
+    <div class="impression-line">Idle</div>
+    <div class="impression-line">Tabs</div>
+  </div>
+  <div id="container" class="container">
+    <div class="option">
+      <div class="option-title">
+        How long can tab be idle?
+        <select class="option-select">
+          <option value="5000">5 mins</option>
+          <option value="10000">10 mins</option>
+          <option value="30000">30 mins</option>
+          <option value="60000">1 hour</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="control">
+      <button class="btn btn--cancel">cancel</button>
+      <button class="btn btn--save">Save</button>
+    </div>
+  </div>
 </body>
 </html>

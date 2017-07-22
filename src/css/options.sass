@@ -1,0 +1,86 @@
+@import "reset.css"
+@import "common.sass"
+
+$impression-width: 300px
+
+*, *:after, *:before
+  box-sizing: border-box
+
+.impression
+  position: absolute
+  top: 0
+  bottom: 0
+  left: 0
+  background-color: $white
+  width: $impression-width
+  padding: 60px 40px
+  text-align: right
+  background-image: repeating-linear-gradient(135deg, transparent, transparent 12px, #ddd 14px, #ddd 14px)
+  border-right: 1px solid $grey-l
+
+.impression-logo
+  position: relative
+  width: 120px
+  height: 120px
+  margin-bottom: 20px
+  right: -10px
+
+.impression-line
+  @extend .font-header
+  font-weight: bold
+  font-size: 48px
+  line-height: 1.2
+
+#container
+  position: absolute
+  top: 0
+  left: $impression-width
+  padding: 80px 40px
+
+.option
+  @extend .font-content
+  line-height: 1.6
+  margin-bottom: 20px
+  font-size: 24px
+
+.option-select
+  display: inline-block
+  font-size: 18px
+  font-style: italic
+  color: $black
+  margin: 0 12px
+  vertical-align: text-bottom
+
+.control
+  margin-top: 100px
+
+.btn
+  @extend .font-header
+  position: relative
+  min-width: 80px
+  padding: 12px 20px
+  border: none
+  border-radius: 4px
+  cursor: pointer
+  outline: none
+
+.btn--cancel
+  background-color: $white-d
+  border: 1px solid #ddd
+  &:hover
+    background-color: lighten($white-d, 1%)
+
+  &:active
+    background-color: darken($white-d, 5%)
+
+.btn--save
+  top: -1px
+  background-color: $yellow
+  box-shadow: 0 1px 0 1px $yellow-d
+  &:hover
+    top: -2px
+    box-shadow: 0 2px 0 1px $yellow-d
+
+  &:active
+    top: 0px
+    box-shadow: 0 0 0 1px $yellow-d
