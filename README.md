@@ -34,11 +34,13 @@ yarn run build
 
 - improve activity detect
   - [x] add thresdhold
-  - [ ] treat new tab as idle tab
+  - [ ] treat new tab as an idle tab
   - [ ] calculate differet window in seperated queue
+  - [ ] link popup page's minutes to options page
+  - [ ] improve ui to show inactive tabs
   - [ ] add shortcut
 - Options Page
-  - [ ] idle time config
+  - [x] idle time config
 - Browser Action
   - [x] icon
   - [x] badge: displaying idle tabs count
