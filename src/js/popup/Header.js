@@ -1,5 +1,29 @@
 import { h, Component } from 'preact'
-import { maybePlural } from '../utils/index'
+import { maybePlural, humanDuration } from '../utils/index'
+import TestButton from './buttons/Button'
+import PrimaryButton from './buttons/PrimaryButton'
+import DisabledButton from './buttons/DisabledButton'
+import styled from 'styled-components'
+import v from 'css/variables'
+
+const Strong = styled.div`
+  font-size: ${props => props.size || '20'}px;
+  line-height: 1.4em;
+  font-weight: bolder;
+  font-family: ${v.fontHeader};
+`
+const ButtonHint = styled.div`
+  font-size: 12px;
+  color: #555;
+  text-align: center;
+`
+
+const Hint = styled.div`
+  font-size: 12px;
+  color: #777;
+  text-align: center;
+  margin: 14px 0 6px 0;
+`
 
 class Button extends Component {
   constructor () {
@@ -13,16 +37,14 @@ class Button extends Component {
 
     if (!unwantedTabCount) {
       return <button class='btn btn--disable'>
-        <div class='btn-content'>No Idle Tabs</div>
+        <Strong>No Idle Tabs</Strong>
       </button>
     }
 
     return (
       <button class='btn' onClick={this.handleClick}>
-        <div class='btn-content'>Close Idle Tabs</div>
-        <div class='btn-hint'>
-          leave {wantedTabCount} active {maybePlural(wantedTabCount, 'tab')}
-        </div>
+        <ButtonHint>close the tabs idle for</ButtonHint>
+        <Strong> {humanDuration(props.idleTime)}</Strong>
       </button>
     )
   }
@@ -34,10 +56,22 @@ class Button extends Component {
 }
 
 class Header extends Component {
-  render ({unwantedTabs, wantedTabs, onRefetch}) {
+  render ({unwantedTabs, wantedTabs, onRefetch, idleTime}) {
     return (
       <div class='header'>
-        <Button unwantedTabs={unwantedTabs} wantedTabs={wantedTabs} onClick={onRefetch} />
+        <Button unwantedTabs={unwantedTabs} wantedTabs={wantedTabs} onClick={onRefetch} idleTime={idleTime} />
+        <Hint>close all tabs, but leave</Hint>
+        <div style={{display: 'flex'}}>
+          <PrimaryButton>
+            <Strong size='14'>1 tabs</Strong>
+          </PrimaryButton>
+          <PrimaryButton>
+            <Strong size='14'>2 tabs</Strong>
+          </PrimaryButton>
+          <PrimaryButton>
+            <Strong size='14'>3 tabs</Strong>
+          </PrimaryButton>
+        </div>
       </div>
     )
   }

@@ -143,14 +143,7 @@ function isFreshTab (tab) {
 function getPopupPageData () {
   return getAllTabs()
     .then(tabs => tabs.sort((a, b) => b.lastActivedAt - a.lastActivedAt))
-    .then(tabs => tabs.reduce((result, tab) => {
-      if (isWantedTab(tab)) {
-        result.wantedTabs.push(tab)
-      } else {
-        result.unwantedTabs.push(tab)
-      }
-      return result
-    }, { ...config, unwantedTabs: [], wantedTabs: []}))
+    .then(tabs => ({ ...config, tabs }))
 }
 
 function getStorage (target) {

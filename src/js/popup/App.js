@@ -29,6 +29,7 @@ class App extends Component {
     return (
       <div>
         <Header
+          idleTime={data.IDLE_TIME}
           wantedTabs={data.wantedTabs}
           unwantedTabs={data.unwantedTabs}
           onRefetch={this.getData}
