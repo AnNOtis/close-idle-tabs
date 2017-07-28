@@ -7,7 +7,11 @@ var webpack = require('webpack'),
   ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 // load the secrets
-var alias = {}
+var alias = {
+  'react': 'preact-compat',
+  'react-dom': 'preact-compat',
+  'create-react-class': 'preact-compat/lib/create-react-class'
+}
 
 var secretsPath = path.join(__dirname, ('secrets.' + env.NODE_ENV + '.js'))
 
@@ -54,6 +58,9 @@ var options = {
     ]
   },
   resolve: {
+    modules: [
+      path.resolve('./src'), 'node_modules'
+    ],
     alias: alias
   },
   plugins: [

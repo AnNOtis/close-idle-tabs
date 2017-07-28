@@ -1,8 +1,60 @@
 import { h, Component } from 'preact'
 import { humanDuration } from '../utils/index'
-import cx from 'classnames'
+import styled, { css } from 'styled-components'
+import v from 'css/variables'
 
 const UNKNOW_FAVICON = '/assets/chrom-internal-icon.png'
+
+const Wrapper = styled.div`
+  position: relative;
+  padding: 10px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  ${({hasHoverEffect}) => !hasHoverEffect && css`
+    &:hover {
+      cursor: default;
+      top: 0px;
+      box-shadow: none;
+    }
+  `}
+
+  ${({hasHoverEffect}) => hasHoverEffect && css`
+    &:hover {
+      top: -1px;
+      box-shadow: 0 1px 0 2px #EEE;
+    }
+    &:active {
+      top: 0px;
+      box-shadow: 0 0 0 1px #EEE;
+    }
+  `}
+`
+
+const Favicon = styled.img`
+  float: left;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+`
+
+const Info = styled.div`
+  overflow: auto;
+`
+
+const Title = styled.div`
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  color: ${v.grey};
+`
+
+const Status = styled.div`
+  font-size: 12px;
+  font-style: italic;
+  color: ${v.lightenGrey};
+  font-weight: lighter;
+  line-height: 16px;
+`
 
 class Tab extends Component {
   constructor () {
@@ -22,17 +74,17 @@ class Tab extends Component {
 
   render ({tab, onClick}) {
     return (
-      <div
+      <Wrapper
         title={tab.title}
-        class={cx('tab', {'tab--current': tab.active})}
         onClick={this.handleClick}
+        hasHoverEffect={!tab.active}
       >
-        <img class='tab-favicon' src={this.favicon(tab)} />
-        <div class='tab-info'>
-          <div class='tab-info-title'>{tab.title}</div>
-          <div class='tab-info-state'>{this.status(tab)}</div>
-        </div>
-      </div>
+        <Favicon src={this.favicon(tab)} />
+        <Info>
+          <Title>{tab.title}</Title>
+          <Status>{this.status(tab)}</Status>
+        </Info>
+      </Wrapper>
     )
   }
 

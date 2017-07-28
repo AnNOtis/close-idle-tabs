@@ -21,49 +21,6 @@ body
   padding-left: 4px
   margin-bottom: 6px
 
-.tab
-  position: relative
-  padding: 10px 6px
-  border-radius: 4px
-  cursor: pointer
-
-  &:not(.tab--current)
-    &:hover
-      top: -1px
-      box-shadow: 0 1px 0 2px #EEE
-
-    &:active
-      top: 0px
-      box-shadow: 0 0 0 1px #EEE
-
-.tab.tab--current
-  &:hover
-    cursor: default
-    top: 0px
-    box-shadow: none
-
-.tab-favicon
-  float: left
-  width: 16px
-  height: 16px
-  margin-right: 6px
-
-.tab-info
-  overflow: auto
-
-.tab-info-title
-  font-size: 12px
-  white-space: nowrap
-  overflow: hidden
-  color: $grey
-
-.tab-info-state
-  font-size: 12px
-  font-style: italic
-  color: $grey-l
-  font-weight: lighter
-  line-height: 16px
-
 .inactiveTabs
   @extend .font-header
   font-size: 12px
