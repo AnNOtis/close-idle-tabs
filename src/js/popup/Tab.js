@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   transition: all 0.3s;
   ${({isActive}) => isActive && css`
     background-color: #FFF;
-    border-left: 2px solid ${v.yellow};
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
   `}
   ${({isActive}) => !isActive && css`
     &:hover {

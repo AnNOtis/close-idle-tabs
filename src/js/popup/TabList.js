@@ -17,9 +17,31 @@ class TabList extends Component {
   render ({ tabs }) {
     return (
       <Ul>
-        {tabs.map(tab => (<Li><Tab tab={tab} /></Li>))}
+        {this.sortedTabs().map(tab => (<Li><Tab tab={tab} /></Li>))}
       </Ul>
     )
+  }
+
+  sortedTabs () {
+    // 最近活躍的 tab 排前面
+    return this.props.tabs.sort((tabA, tabB) => {
+      let a = tabA.lastActivedAt
+      let b = tabB.lastActivedAt
+
+      // 讓 pinned 與 active 的 tab 排在最前面
+      if (tabA.active) {
+        a = Number.POSITIVE_INFINITY
+      } else if (tabA.pinned) {
+        a = Number.POSITIVE_INFINITY - 1
+      }
+      if (tabB.active) {
+        b = Number.POSITIVE_INFINITY
+      } else if (tabB.pinned) {
+        b = Number.POSITIVE_INFINITY - 1
+      }
+
+      return b - a
+    })
   }
 }
 
