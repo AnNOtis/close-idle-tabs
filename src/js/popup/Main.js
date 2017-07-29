@@ -1,13 +1,11 @@
 import { h, Component } from 'preact'
-import InactiveTabPreview from './InactiveTabPreview'
-import ActiveTab from './ActiveTab'
+import TabList from './TabList'
 
 class Main extends Component {
-  render ({idleTime, unwantedTabs, wantedTabs}) {
+  render ({idleTime, tabs}) {
     return (
       <div class='main'>
-        <InactiveTabPreview idleTime={idleTime} unwantedTabs={unwantedTabs} />
-        <ActiveTab wantedTabs={wantedTabs} />
+        <TabList tabs={tabs} />
       </div>
     )
   }

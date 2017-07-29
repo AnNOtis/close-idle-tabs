@@ -1,10 +1,12 @@
 import { h, Component } from 'preact'
-import { maybePlural, humanDuration } from '../utils/index'
-import TestButton from './buttons/Button'
+import { humanDuration } from '../utils/index'
 import PrimaryButton from './buttons/PrimaryButton'
-import DisabledButton from './buttons/DisabledButton'
 import styled from 'styled-components'
 import v from 'css/variables'
+
+const Wrapper = styled.div`
+  margin: 12px;
+`
 
 const Strong = styled.div`
   font-size: ${props => props.size || '20'}px;
@@ -32,15 +34,6 @@ class Button extends Component {
   }
 
   render (props) {
-    const unwantedTabCount = props.unwantedTabs.length
-    const wantedTabCount = props.wantedTabs.length
-
-    if (!unwantedTabCount) {
-      return <button class='btn btn--disable'>
-        <Strong>No Idle Tabs</Strong>
-      </button>
-    }
-
     return (
       <button class='btn' onClick={this.handleClick}>
         <ButtonHint>close the tabs idle for</ButtonHint>
@@ -56,10 +49,10 @@ class Button extends Component {
 }
 
 class Header extends Component {
-  render ({unwantedTabs, wantedTabs, onRefetch, idleTime}) {
+  render ({onRefetch, idleTime}) {
     return (
-      <div class='header'>
-        <Button unwantedTabs={unwantedTabs} wantedTabs={wantedTabs} onClick={onRefetch} idleTime={idleTime} />
+      <Wrapper>
+        <Button onClick={onRefetch} idleTime={idleTime} />
         <Hint>close all tabs, but leave</Hint>
         <div style={{display: 'flex'}}>
           <PrimaryButton>
@@ -72,7 +65,7 @@ class Header extends Component {
             <Strong size='14'>3 tabs</Strong>
           </PrimaryButton>
         </div>
-      </div>
+      </Wrapper>
     )
   }
 }

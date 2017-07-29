@@ -36,6 +36,7 @@ class App extends Component {
         />
         <Main
           idleTime={data.IDLE_TIME}
+          tabs={data.tabs}
           unwantedTabs={data.unwantedTabs}
           wantedTabs={data.wantedTabs}
         />
