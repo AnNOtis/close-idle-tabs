@@ -6,32 +6,9 @@
   <p align="center">Press a button to close idle tabs. /\/\/ <a href="https://chrome.google.com/webstore/detail/close-idle-tabs/eikegnblaefhggcbhmklebbedapcljmj"><i>download</a></p>
 </p>
 
-##
+## ScreenShot
 
-<p>
-<img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/demo1.png" width="200" />
-&nbsp;&nbsp;
-<img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/demo2.png" width="210" />
-</p>
-&nbsp;&nbsp;
-<img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/demo3.png" width="210" />
-</p>
-
-## Run
-
-Development:
-
-```sh
-yarn install
-yarn run start
-```
-
-Build:
-
-```sh
-yarn run build
-```
-
+<img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/demo.gif" width="240" />
 
 ## TODOs
 
