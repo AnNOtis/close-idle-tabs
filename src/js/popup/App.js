@@ -1,7 +1,6 @@
 import { h, Component } from 'preact'
 import Header from './Header'
 import Main from './Main'
-import { interval } from '../utils/index'
 import { TAB_DATA_PORT } from '../background'
 
 class App extends Component {
@@ -20,11 +19,9 @@ class App extends Component {
     this.tabDataChannel.onMessage.addListener(data => {
       this.setState({ data })
     })
-    this._cancelFetchingData = interval(() => this.tabDataChannel.postMessage(), 2000)
   }
 
   componentWillUnmount () {
-    this._cancelFetchingData()
     this.tabDataChannel.disconnect()
   }
 

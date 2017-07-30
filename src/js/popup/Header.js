@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   right: 0;
   padding: 16px 12px;
   background-color: white;
-  z-index: 999;
+  z-index: 9999;
   box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
 `
 
@@ -25,13 +25,6 @@ const ButtonHint = styled.div`
   font-size: 12px;
   color: #555;
   text-align: center;
-`
-
-const Hint = styled.div`
-  font-size: 12px;
-  color: #777;
-  text-align: center;
-  margin: 14px 0 6px 0;
 `
 
 class Header extends Component {

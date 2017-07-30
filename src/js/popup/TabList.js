@@ -14,39 +14,59 @@ const Li = styled.li`
 `
 
 class TabList extends Component {
+  constructor () {
+    super()
+
+    this.state = {
+      currentTime: Date.now()
+    }
+  }
+
+  componentDidMount () {
+    this._timer = setInterval(() => {
+      this.setState({ currentTime: Date.now() })
+    }, 1000)
+  }
+
+  componentWillUnmount () {
+    clearInterval(this._timer)
+  }
+
   render ({ tabs, tabsWillBeClosed }) {
     return (
       <Ul>
         {this.sortedTabs().map(tab => (
-          <Li><Tab tab={tab} willBeClosed={tabsWillBeClosed.indexOf(tab.id) !== -1} /></Li>
+          <Li>
+            <Tab
+              key={tab.id}
+              tab={tab}
+              currentTime={this.state.currentTime}
+              willBeClosed={tabsWillBeClosed.indexOf(tab.id) !== -1}
+            />
+          </Li>
         ))}
       </Ul>
     )
   }
 
   sortedTabs () {
-    // 最近活躍的 tab 排前面
-    return this.props.tabs.sort((tabA, tabB) => {
-      let a = tabA.lastActivedAt
-      let b = tabB.lastActivedAt
+    const dupTabs = this.props.tabs.slice()
+    const tabs = []
+    const activeTabs = []
+    const pinnedTabs = []
 
-      // 讓 pinned 與 active 的 tab 排在最前面
-      if (tabA.active) {
-        a = Number.POSITIVE_INFINITY
-      } else if (tabA.pinned) {
-        a = Number.POSITIVE_INFINITY - 1
+    dupTabs.forEach(tab => {
+      if (tab.active) {
+        activeTabs.push(tab)
+      } else if (tab.pinned) {
+        pinnedTabs.push(tab)
+      } else {
+        tabs.push(tab)
       }
-      if (tabB.active) {
-        b = Number.POSITIVE_INFINITY
-      } else if (tabB.pinned) {
-        b = Number.POSITIVE_INFINITY - 1
-      }
-
-      return b - a
     })
+
+    return [].concat(activeTabs, pinnedTabs, tabs)
   }
-
-
 }
 
 export default TabList

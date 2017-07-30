@@ -8,6 +8,7 @@ const config = {
 }
 export const TAB_DATA_PORT = 'TAB_DATA_PORT'
 const tabsActivityRecord = {}
+window.records = tabsActivityRecord
 const tabDataPubSub = new Ovv()
 
 setupConfig()
@@ -28,53 +29,80 @@ function setupConfig () {
 
 chrome.runtime.onConnect.addListener(function (port) {
   if (port.name === TAB_DATA_PORT) {
-    const cancel = tabDataPubSub.subscribe(data => {
+    // 初始化先送一次資料
+    pushData()
+
+    // 提供 pubsub 讓其他元件主動推送資料
+    const cancel = tabDataPubSub.subscribe(pushData)
+
+    // 讓頁面可以自行請求資料
+    port.onMessage.addListener(pushData)
+
+    // 當通道關閉則取消 pubsub
+    port.onDisconnect.addListener(cancel)
+  }
+
+  function pushData () {
+    getPopupPageData().then(data => {
       port.postMessage(data)
     })
-    port.onMessage.addListener(pushTabData)
-    port.onDisconnect.addListener(cancel)
   }
 })
 
-function pushTabData () {
-  return getPopupPageData().then(data => {
-    tabDataPubSub.publish(data)
-  })
+function pushDataToAllPages () {
+  tabDataPubSub.publish()
 }
 
 function initActions () {
+  let currentActivatedTab
   let _cancelTimer
   chrome.tabs.onActivated.addListener(info => {
     if (_cancelTimer) { _cancelTimer() }
     _cancelTimer = interval(() => {
+      currentActivatedTab = info.tabId
       recordTabActivity(info.tabId)
     }, 1000, config.DELAY_BEFORE_RECORD_ACTIVITY)
   })
 
-  chrome.tabs.onCreated.addListener(info => {
-    recordTabActivity(info.tabId)
+  chrome.tabs.onUpdated.addListener((id, changeInfo, tab) => {
+    // detect tab created
+    if (changeInfo.status === 'complete') {
+      recordTabActivity(id)
+    }
   })
 
   chrome.tabs.onRemoved.addListener(info => {
+    if (currentActivatedTab === info.tabId) {
+      _cancelTimer && _cancelTimer()
+    }
     removeTabRecord(info.tabId)
   })
 }
 
 function recordTabActivity (id) {
   tabsActivityRecord[id] = { lastActivedAt: Date.now() }
-  pushTabData()
+  pushDataToAllPages()
+}
+
+function recordTabsActivity (ids) {
+  const now = Date.now()
+  ids.forEach(id => {
+    tabsActivityRecord[id] = { lastActivedAt: now }
+  })
+  pushDataToAllPages()
 }
 
 function registTabs (tabs) {
-  tabs
+  const tabIDs = tabs
     .map(tab => tab.id)
     .filter(tabId => !tabsActivityRecord[tabId])
-    .forEach(recordTabActivity)
+
+  recordTabsActivity(tabIDs)
 }
 
 function removeTabRecord (id) {
   delete tabsActivityRecord[id]
-  pushTabData()
+  pushDataToAllPages()
 }
 
 window.closeUnwantedTabs = closeUnwantedTabs
@@ -82,14 +110,6 @@ function closeUnwantedTabs () {
   return unwantedTabs()
     .then(tap('removeTabs:'))
     .then(tabs => chrome.tabs.remove(tabs.map(tab => tab.id)))
-}
-
-function updateBadge () {
-  return wantedTabs()
-    .then(tap('updateBadge:'))
-    .then(tabs => {
-      chrome.browserAction.setBadgeText({text: tabs.length.toString()})
-    })
 }
 
 function unwantedTabs () {
@@ -103,20 +123,25 @@ function wantedTabs () {
 function getAllTabs () {
   return new Promise(function (resolve, reject) {
     try {
-      chrome.tabs.query({}, tabs => {
-        resolve(mixActivityData(tabs))
-      })
+      setTimeout(chrome.tabs.query({}, tabs => {
+        // console.log(tabsActivityRecord);
+        const result = mixActivityData(tabs)
+        // console.log(result);
+        resolve(result)
+      }), 100)
     } catch (e) {
+      console.error(e)
       reject(e)
     }
   })
 
   function mixActivityData (tabs) {
-    return tabs.map(tab => ({
-      ...tab,
-      lastActivedAt:
-        tabsActivityRecord[tab.id] && tabsActivityRecord[tab.id].lastActivedAt
-    }))
+    return tabs.map(tab => {
+      return {
+        ...tab,
+        ...tabsActivityRecord[tab.id]
+      }
+    })
   }
 }
 
@@ -142,7 +167,9 @@ function isFreshTab (tab) {
 
 function getPopupPageData () {
   return getAllTabs()
-    .then(tabs => tabs.sort((a, b) => b.lastActivedAt - a.lastActivedAt))
+    .then(tabs => tabs.sort((a, b) =>
+      parseInt(b.lastActivedAt / 1000) - parseInt(a.lastActivedAt / 1000)
+    ))
     .then(tabs => ({ ...config, tabs }))
 }
 

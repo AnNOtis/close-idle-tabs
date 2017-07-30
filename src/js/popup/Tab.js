@@ -139,16 +139,6 @@ class Tab extends Component {
     this.handleClick = this.handleClick.bind(this)
   }
 
-  componentDidMount () {
-    this._timer = setInterval(() => {
-      this.setState({ currentTime: new Date() })
-    }, 1000)
-  }
-
-  componentWillUnmount () {
-    clearInterval(this._timer)
-  }
-
   render ({tab, onClick, willBeClosed}) {
     const isFixed = tab.active || tab.pinned
     return (
@@ -165,7 +155,7 @@ class Tab extends Component {
         </StatusIcon>
         <Favicon src={this.favicon(tab)} />
         <Info>
-          <Title>{willBeClosed}{tab.title}</Title>
+          <Title>{tab.title}</Title>
           {!isFixed && <IdleTime>{this.status(tab)}</IdleTime>}
         </Info>
       </Wrapper>
@@ -194,7 +184,7 @@ class Tab extends Component {
     } else {
       if (!tab.lastActivedAt) return ''
 
-      return `${humanDuration(this.state.currentTime - tab.lastActivedAt)} ago`
+      return `${humanDuration(this.props.currentTime - tab.lastActivedAt)} ago`
     }
   }
 }
