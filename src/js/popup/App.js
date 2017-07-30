@@ -108,9 +108,6 @@ class App extends Component {
 
   removeIdleTabs () {
     this.tabDataChannel.postMessage({ what: 'closeIdleTabs' })
-
-    // automatically close popup page
-    setTimeout(() => window.close(), 1000)
   }
 }
 
