@@ -8,6 +8,11 @@ class App extends Component {
   constructor () {
     super()
     this.getData = this.getData.bind(this)
+    this.highlightTabsWilllBeClosed = this.highlightTabsWilllBeClosed.bind(this)
+    this.cancelTabsWilllBeClosed = this.cancelTabsWilllBeClosed.bind(this)
+    this.state = {
+      tabsWillBeClosed: []
+    }
   }
 
   componentDidMount () {
@@ -29,19 +34,27 @@ class App extends Component {
     return (
       <div>
         <Header
+          tabs={data.tabs}
           idleTime={data.IDLE_TIME}
-          wantedTabs={data.wantedTabs}
-          unwantedTabs={data.unwantedTabs}
-          onRefetch={this.getData}
+          onEnterButton={this.highlightTabsWilllBeClosed}
+          onLeaveButton={this.cancelTabsWilllBeClosed}
+          // onClickButton={this.cancelTabs}
         />
         <Main
           idleTime={data.IDLE_TIME}
           tabs={data.tabs}
-          unwantedTabs={data.unwantedTabs}
-          wantedTabs={data.wantedTabs}
+          tabsWillBeClosed={this.state.tabsWillBeClosed}
         />
       </div>
     )
+  }
+
+  highlightTabsWilllBeClosed (tabsWillBeClosed = []) {
+    this.setState({ tabsWillBeClosed: tabsWillBeClosed })
+  }
+
+  cancelTabsWilllBeClosed () {
+    this.setState({ tabsWillBeClosed: [] })
   }
 
   getData () {

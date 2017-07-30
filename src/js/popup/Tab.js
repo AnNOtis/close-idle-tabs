@@ -1,11 +1,32 @@
 import { h, Component } from 'preact'
 import { humanDuration } from '../utils/index'
-import styled, { css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import v from 'css/variables'
 import PinIcon from './icons/PinIcon'
 import EyeIcon from './icons/EyeIcon'
+import CrossIcon from './icons/CrossIcon'
 
 const UNKNOW_FAVICON = '/assets/chrom-internal-icon.png'
+
+const closeBgAnim = keyframes`
+  from {
+    background-position: -27px 0;
+  }
+
+  to {
+    background-position: 0 0;
+  }
+`
+
+const closeIconAnim = keyframes`
+  from {
+    left: -20px;
+  }
+
+  to {
+    left: 0px;
+  }
+`
 
 const Wrapper = styled.div`
   display: flex;
@@ -38,6 +59,32 @@ const Wrapper = styled.div`
   ${({isActive}) => isActive && css`
     cursor: default
   `}
+`
+const CloseHint = styled.span`
+  animation: ${closeBgAnim} 0.3s ease-out 1;
+  position: absolute;
+  display: flex;
+  background-color: ${v.red};
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 16px;
+  color: white;
+  font-size: 12px;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 3px;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  background-image: linear-gradient(to right, ${v.red} 50%, white 0);
+  background-size: 50px 100%;
+  background-position: 0 0;
+
+  svg {
+    position: relative;
+    animation: ${closeIconAnim} 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) 0.1s 1;
+  }
 `
 
 const StatusIcon = styled.span`
@@ -102,7 +149,7 @@ class Tab extends Component {
     clearInterval(this._timer)
   }
 
-  render ({tab, onClick}) {
+  render ({tab, onClick, willBeClosed}) {
     const isFixed = tab.active || tab.pinned
     return (
       <Wrapper
@@ -111,12 +158,14 @@ class Tab extends Component {
         isFixed={isFixed}
         isActive={tab.active}
       >
+        {willBeClosed && <CloseHint><CrossIcon /></CloseHint>}
         <StatusIcon>
-          {tab.pinned && <PinIcon />}
+          {(tab.pinned && !tab.active) && <PinIcon />}
+          {tab.active && <EyeIcon />}
         </StatusIcon>
         <Favicon src={this.favicon(tab)} />
         <Info>
-          <Title>{tab.title}</Title>
+          <Title>{willBeClosed}{tab.title}</Title>
           {!isFixed && <IdleTime>{this.status(tab)}</IdleTime>}
         </Info>
       </Wrapper>

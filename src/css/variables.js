@@ -1,6 +1,7 @@
 export default {
   yellow: '#FFDB72',
   darkenYellow: '#FDC627',
+  red: '#fa5752',
   white: '#FFFFFF',
   darkenWhite: '#F7F9FA',
   black: '#333',

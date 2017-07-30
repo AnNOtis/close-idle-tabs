@@ -14,10 +14,12 @@ const Li = styled.li`
 `
 
 class TabList extends Component {
-  render ({ tabs }) {
+  render ({ tabs, tabsWillBeClosed }) {
     return (
       <Ul>
-        {this.sortedTabs().map(tab => (<Li><Tab tab={tab} /></Li>))}
+        {this.sortedTabs().map(tab => (
+          <Li><Tab tab={tab} willBeClosed={tabsWillBeClosed.indexOf(tab.id) !== -1} /></Li>
+        ))}
       </Ul>
     )
   }
@@ -43,6 +45,8 @@ class TabList extends Component {
       return b - a
     })
   }
+
+
 }
 
 export default TabList

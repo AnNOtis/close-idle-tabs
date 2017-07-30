@@ -5,11 +5,18 @@ import styled from 'styled-components'
 import v from 'css/variables'
 
 const Wrapper = styled.div`
-  margin: 12px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 12px;
+  background-color: white;
+  z-index: 999;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
 `
 
 const Strong = styled.div`
-  font-size: ${props => props.size || '20'}px;
+  font-size: 20px;
   line-height: 1.4em;
   font-weight: bolder;
   font-family: ${v.fontHeader};
@@ -27,46 +34,35 @@ const Hint = styled.div`
   margin: 14px 0 6px 0;
 `
 
-class Button extends Component {
+class Header extends Component {
   constructor () {
     super()
-    this.handleClick = this.handleClick.bind(this)
+    this.handleByTimeButtonHover = this.handleByTimeButtonHover.bind(this)
   }
 
-  render (props) {
-    return (
-      <button class='btn' onClick={this.handleClick}>
-        <ButtonHint>close the tabs idle for</ButtonHint>
-        <Strong> {humanDuration(props.idleTime)}</Strong>
-      </button>
-    )
-  }
-
-  handleClick () {
-    chrome.extension.getBackgroundPage().closeUnwantedTabs()
-    this.props.onClick()
-  }
-}
-
-class Header extends Component {
-  render ({onRefetch, idleTime}) {
+  render ({idleTime}) {
     return (
       <Wrapper>
-        <Button onClick={onRefetch} idleTime={idleTime} />
-        <Hint>close all tabs, but leave</Hint>
-        <div style={{display: 'flex'}}>
-          <PrimaryButton>
-            <Strong size='14'>1 tabs</Strong>
-          </PrimaryButton>
-          <PrimaryButton>
-            <Strong size='14'>2 tabs</Strong>
-          </PrimaryButton>
-          <PrimaryButton>
-            <Strong size='14'>3 tabs</Strong>
-          </PrimaryButton>
-        </div>
+        <PrimaryButton onMouseEnter={this.handleByTimeButtonHover} onMouseLeave={this.props.onLeaveButton}>
+          <ButtonHint>close the tabs idle for</ButtonHint>
+          <Strong>{humanDuration(idleTime)}</Strong>
+        </PrimaryButton>
       </Wrapper>
     )
+  }
+
+  handleByTimeButtonHover () {
+    const tabsWillBeClosed = this.props.tabs.filter(tab => {
+      if (tab.active) return false
+      if (tab.pinned) return false
+      return (Date.now() - tab.lastActivedAt) > this.props.idleTime
+    })
+
+    this.props.onEnterButton(tabsWillBeClosed.map(tab => tab.id))
+  }
+
+  handleButtonLeave () {
+    this.props.onLeaveButton()
   }
 }
 
