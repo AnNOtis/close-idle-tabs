@@ -14,25 +14,7 @@ const Li = styled.li`
 `
 
 class TabList extends Component {
-  constructor () {
-    super()
-
-    this.state = {
-      currentTime: Date.now()
-    }
-  }
-
-  componentDidMount () {
-    this._timer = setInterval(() => {
-      this.setState({ currentTime: Date.now() })
-    }, 1000)
-  }
-
-  componentWillUnmount () {
-    clearInterval(this._timer)
-  }
-
-  render ({ tabs, tabsWillBeClosed }) {
+  render ({ tabs, idleTabsID, isHighlightingIdleTabs, currentTime }) {
     return (
       <Ul>
         {this.sortedTabs().map(tab => (
@@ -40,8 +22,10 @@ class TabList extends Component {
             <Tab
               key={tab.id}
               tab={tab}
-              currentTime={this.state.currentTime}
-              willBeClosed={tabsWillBeClosed.indexOf(tab.id) !== -1}
+              currentTime={currentTime}
+              showCloseIcon={
+                isHighlightingIdleTabs && idleTabsID.indexOf(tab.id) !== -1
+              }
             />
           </Li>
         ))}

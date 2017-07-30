@@ -28,37 +28,20 @@ const ButtonHint = styled.div`
 `
 
 class Header extends Component {
-  constructor () {
-    super()
-    this.handleByTimeButtonHover = this.handleByTimeButtonHover.bind(this)
-  }
-
-  render ({idleTime}) {
+  render ({idleTime, idleTabsID, onEnterButton, onLeaveButton, onClickButton}) {
     return (
       <Wrapper>
         <PrimaryButton
-          onMouseEnter={this.handleByTimeButtonHover} onMouseLeave={this.props.onLeaveButton}
-          onClick={this.props.onClickButton}
+          onMouseEnter={onEnterButton}
+          onMouseLeave={onLeaveButton}
+          onClick={onClickButton}
+          disabled={idleTabsID.length === 0}
         >
-          <ButtonHint>close the tabs idle for</ButtonHint>
+          <ButtonHint>close tabs idle for</ButtonHint>
           <Strong>{humanDuration(idleTime)}</Strong>
         </PrimaryButton>
       </Wrapper>
     )
-  }
-
-  handleByTimeButtonHover () {
-    const tabsWillBeClosed = this.props.tabs.filter(tab => {
-      if (tab.active) return false
-      if (tab.pinned) return false
-      return (Date.now() - tab.lastActivedAt) > this.props.idleTime
-    })
-
-    this.props.onEnterButton(tabsWillBeClosed.map(tab => tab.id))
-  }
-
-  handleButtonLeave () {
-    this.props.onLeaveButton()
   }
 }
 

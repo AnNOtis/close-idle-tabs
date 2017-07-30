@@ -139,7 +139,7 @@ class Tab extends Component {
     this.handleClick = this.handleClick.bind(this)
   }
 
-  render ({tab, onClick, willBeClosed}) {
+  render ({tab, onClick, showCloseIcon}) {
     const isFixed = tab.active || tab.pinned
     return (
       <Wrapper
@@ -148,7 +148,7 @@ class Tab extends Component {
         isFixed={isFixed}
         isActive={tab.active}
       >
-        {willBeClosed && <CloseHint><CrossIcon /></CloseHint>}
+        {showCloseIcon && <CloseHint><CrossIcon /></CloseHint>}
         <StatusIcon>
           {(tab.pinned && !tab.active) && <PinIcon />}
           {tab.active && <EyeIcon />}

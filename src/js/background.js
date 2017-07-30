@@ -1,7 +1,11 @@
 import { interval } from './utils/index'
 import Ovv from 'ovv'
-// const DEFAULT_IDLE_TIME = 5 * 1000 * 60
-const DEFAULT_IDLE_TIME = 10000 // for debug
+
+let DEFAULT_IDLE_TIME = 5 * 1000 * 60
+if (process.env.NODE_ENV === 'development') {
+  DEFAULT_IDLE_TIME = 10000000000
+}
+
 const DEFAULT_DELAY_BEFORE_RECORD_ACTIVITY = 3000
 const config = {
   IDLE_TIME: DEFAULT_IDLE_TIME,
@@ -161,9 +165,7 @@ function getAllTabs (windowId) {
 
 function getPopupPageData (windowId) {
   return getAllTabs(windowId)
-    .then(tabs => tabs.sort((a, b) =>
-      parseInt(b.lastActivedAt / 1000) - parseInt(a.lastActivedAt / 1000)
-    ))
+    .then(tabs => tabs.sort((a, b) => b.lastActivedAt - a.lastActivedAt))
     .then(tabs => ({ ...config, tabs }))
 }
 

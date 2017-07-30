@@ -8,14 +8,56 @@ class App extends Component {
     super()
     this.getData = this.getData.bind(this)
     this.removeIdleTabs = this.removeIdleTabs.bind(this)
-    this.highlightTabsWilllBeClosed = this.highlightTabsWilllBeClosed.bind(this)
-    this.cancelTabsWilllBeClosed = this.cancelTabsWilllBeClosed.bind(this)
+    this.setIdleTabs = this.setIdleTabs.bind(this)
+    this.idleTabsID = this.idleTabsID.bind(this)
+    this.highlightIdleTabs = this.highlightIdleTabs.bind(this)
+    this.cancelHighlightIdleTabs = this.cancelHighlightIdleTabs.bind(this)
+
     this.state = {
-      tabsWillBeClosed: []
+      currentTime: Date.now(),
+      isHighlightingIdleTabs: false,
+      idleTabsID: []
     }
   }
 
   componentDidMount () {
+    this.setupDataChannel()
+    this.setupClock()
+  }
+
+  componentWillUnmount () {
+    this.cancelDataChannel()
+    this.cancelClock()
+  }
+
+  render (_, {data, currentTime, idleTabsID, isHighlightingIdleTabs}) {
+    if (!data) return <div>loading...</div>
+
+    return (
+      <div>
+        <Header
+          tabs={data.tabs}
+          idleTime={data.IDLE_TIME}
+          idleTabsID={idleTabsID}
+          onEnterButton={this.highlightIdleTabs}
+          onLeaveButton={this.cancelHighlightIdleTabs}
+          onClickButton={this.removeIdleTabs}
+        />
+        <Main
+          currentTime={currentTime}
+          tabs={data.tabs}
+          isHighlightingIdleTabs={isHighlightingIdleTabs}
+          idleTabsID={idleTabsID}
+        />
+      </div>
+    )
+  }
+
+  getData () {
+    this.tabDataChannel.postMessage({ what: 'data' })
+  }
+
+  setupDataChannel () {
     chrome.windows.getCurrent(win => {
       this.tabDataChannel = chrome.runtime.connect({
         name: `${TAB_DATA_PORT}#${win.id}`
@@ -26,37 +68,42 @@ class App extends Component {
     })
   }
 
-  componentWillUnmount () {
+  cancelDataChannel () {
     this.tabDataChannel.disconnect()
   }
 
-  render (_, {data}) {
-    if (!data) return <div>loading...</div>
-
-    return (
-      <div>
-        <Header
-          tabs={data.tabs}
-          idleTime={data.IDLE_TIME}
-          onEnterButton={this.highlightTabsWilllBeClosed}
-          onLeaveButton={this.cancelTabsWilllBeClosed}
-          onClickButton={this.removeIdleTabs}
-        />
-        <Main
-          idleTime={data.IDLE_TIME}
-          tabs={data.tabs}
-          tabsWillBeClosed={this.state.tabsWillBeClosed}
-        />
-      </div>
-    )
+  setupClock () {
+    this._timer = setInterval(() => {
+      const currentTime = Date.now()
+      this.setState({ currentTime, idleTabsID: this.idleTabsID(currentTime) })
+    }, 1000)
   }
 
-  highlightTabsWilllBeClosed (tabsWillBeClosed = []) {
-    this.setState({ tabsWillBeClosed: tabsWillBeClosed })
+  cancelClock () {
+    clearInterval(this._timer)
   }
 
-  cancelTabsWilllBeClosed () {
-    this.setState({ tabsWillBeClosed: [] })
+  setIdleTabs () {
+    this.setState({ idleTabsID: this.idleTabsID() })
+  }
+
+  idleTabsID (now = null) {
+    const data = this.state.data
+
+    return data.tabs.filter(tab => {
+      if (tab.active) return false
+      if (tab.pinned) return false
+      return ((now || this.state.currentTime) - tab.lastActivedAt) > data.IDLE_TIME
+    })
+    .map(tab => tab.id)
+  }
+
+  highlightIdleTabs () {
+    this.setState({ isHighlightingIdleTabs: true })
+  }
+
+  cancelHighlightIdleTabs () {
+    this.setState({ isHighlightingIdleTabs: false })
   }
 
   removeIdleTabs () {
@@ -64,10 +111,6 @@ class App extends Component {
 
     // automatically close popup page
     setTimeout(() => window.close(), 1000)
-  }
-
-  getData () {
-    this.tabDataChannel.postMessage({ what: 'data' })
   }
 }
 
