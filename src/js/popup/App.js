@@ -15,9 +15,13 @@ class App extends Component {
   }
 
   componentDidMount () {
-    this.tabDataChannel = chrome.runtime.connect({name: TAB_DATA_PORT})
-    this.tabDataChannel.onMessage.addListener(data => {
-      this.setState({ data })
+    chrome.windows.getCurrent(win => {
+      this.tabDataChannel = chrome.runtime.connect({
+        name: `${TAB_DATA_PORT}#${win.id}`,
+      })
+      this.tabDataChannel.onMessage.addListener(data => {
+        this.setState({ data })
+      })
     })
   }
 

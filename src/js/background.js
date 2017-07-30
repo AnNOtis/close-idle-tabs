@@ -28,7 +28,10 @@ function setupConfig () {
 }
 
 chrome.runtime.onConnect.addListener(function (port) {
-  if (port.name === TAB_DATA_PORT) {
+  const tabDataPort = port.name.match(new RegExp(`${TAB_DATA_PORT}#([0-9]*)`))
+  const windowId = tabDataPort && parseInt(tabDataPort[1])
+
+  if (tabDataPort) {
     // 初始化先送一次資料
     pushData()
 
@@ -43,7 +46,7 @@ chrome.runtime.onConnect.addListener(function (port) {
   }
 
   function pushData () {
-    getPopupPageData().then(data => {
+    getPopupPageData(windowId).then(data => {
       port.postMessage(data)
     })
   }
@@ -120,13 +123,11 @@ function wantedTabs () {
   return getAllTabs().then(getWantedTabs)
 }
 
-function getAllTabs () {
+function getAllTabs (windowId) {
   return new Promise(function (resolve, reject) {
     try {
-      setTimeout(chrome.tabs.query({}, tabs => {
-        // console.log(tabsActivityRecord);
+      setTimeout(chrome.tabs.query({ windowId }, tabs => {
         const result = mixActivityData(tabs)
-        // console.log(result);
         resolve(result)
       }), 100)
     } catch (e) {
@@ -165,8 +166,8 @@ function isFreshTab (tab) {
   return tab.lastActivedAt && (new Date() - tab.lastActivedAt) < config.IDLE_TIME
 }
 
-function getPopupPageData () {
-  return getAllTabs()
+function getPopupPageData (windowId) {
+  return getAllTabs(windowId)
     .then(tabs => tabs.sort((a, b) =>
       parseInt(b.lastActivedAt / 1000) - parseInt(a.lastActivedAt / 1000)
     ))
