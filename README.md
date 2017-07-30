@@ -13,6 +13,9 @@
 &nbsp;&nbsp;
 <img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/demo2.png" width="210" />
 </p>
+&nbsp;&nbsp;
+<img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/demo3.png" width="210" />
+</p>
 
 ## Run
 
@@ -34,10 +37,10 @@ yarn run build
 
 - improve activity detect
   - [x] add thresdhold
+  - [x] calculate differet window in seperated queue
+  - [x] link popup page's minutes to options page
+  - [x] improve ui to show inactive tabs
   - [ ] treat new tab as an idle tab
-  - [ ] calculate differet window in seperated queue
-  - [ ] link popup page's minutes to options page
-  - [ ] improve ui to show inactive tabs
   - [ ] add shortcut
 - Options Page
   - [x] idle time config
