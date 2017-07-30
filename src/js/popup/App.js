@@ -7,6 +7,7 @@ class App extends Component {
   constructor () {
     super()
     this.getData = this.getData.bind(this)
+    this.removeIdleTabs = this.removeIdleTabs.bind(this)
     this.highlightTabsWilllBeClosed = this.highlightTabsWilllBeClosed.bind(this)
     this.cancelTabsWilllBeClosed = this.cancelTabsWilllBeClosed.bind(this)
     this.state = {
@@ -17,7 +18,7 @@ class App extends Component {
   componentDidMount () {
     chrome.windows.getCurrent(win => {
       this.tabDataChannel = chrome.runtime.connect({
-        name: `${TAB_DATA_PORT}#${win.id}`,
+        name: `${TAB_DATA_PORT}#${win.id}`
       })
       this.tabDataChannel.onMessage.addListener(data => {
         this.setState({ data })
@@ -39,7 +40,7 @@ class App extends Component {
           idleTime={data.IDLE_TIME}
           onEnterButton={this.highlightTabsWilllBeClosed}
           onLeaveButton={this.cancelTabsWilllBeClosed}
-          // onClickButton={this.cancelTabs}
+          onClickButton={this.removeIdleTabs}
         />
         <Main
           idleTime={data.IDLE_TIME}
@@ -58,8 +59,15 @@ class App extends Component {
     this.setState({ tabsWillBeClosed: [] })
   }
 
+  removeIdleTabs () {
+    this.tabDataChannel.postMessage({ what: 'closeIdleTabs' })
+
+    // automatically close popup page
+    setTimeout(() => window.close(), 1000)
+  }
+
   getData () {
-    this.tabDataChannel.postMessage()
+    this.tabDataChannel.postMessage({ what: 'data' })
   }
 }
 

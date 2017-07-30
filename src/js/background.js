@@ -1,6 +1,7 @@
 import { interval } from './utils/index'
 import Ovv from 'ovv'
-const DEFAULT_IDLE_TIME = 5 * 1000 * 60
+// const DEFAULT_IDLE_TIME = 5 * 1000 * 60
+const DEFAULT_IDLE_TIME = 10000 // for debug
 const DEFAULT_DELAY_BEFORE_RECORD_ACTIVITY = 3000
 const config = {
   IDLE_TIME: DEFAULT_IDLE_TIME,
@@ -39,16 +40,28 @@ chrome.runtime.onConnect.addListener(function (port) {
     const cancel = tabDataPubSub.subscribe(pushData)
 
     // 讓頁面可以自行請求資料
-    port.onMessage.addListener(pushData)
+    port.onMessage.addListener(handleMessage)
 
     // 當通道關閉則取消 pubsub
     port.onDisconnect.addListener(cancel)
+  }
+
+  function handleMessage (msg) {
+    if (msg.what === 'data') {
+      pushData()
+    } else if (msg.what === 'closeIdleTabs') {
+      closeIdleTabs()
+    }
   }
 
   function pushData () {
     getPopupPageData(windowId).then(data => {
       port.postMessage(data)
     })
+  }
+
+  function closeIdleTabs () {
+    closeIdleTabsByWindow(windowId)
   }
 })
 
@@ -108,19 +121,19 @@ function removeTabRecord (id) {
   pushDataToAllPages()
 }
 
-window.closeUnwantedTabs = closeUnwantedTabs
-function closeUnwantedTabs () {
-  return unwantedTabs()
-    .then(tap('removeTabs:'))
+function closeIdleTabsByWindow (windowId) {
+  return getAllTabs(windowId)
+    .then(getIdleTabs)
     .then(tabs => chrome.tabs.remove(tabs.map(tab => tab.id)))
 }
 
-function unwantedTabs () {
-  return getAllTabs().then(getUnwantedTabs)
-}
-
-function wantedTabs () {
-  return getAllTabs().then(getWantedTabs)
+function getIdleTabs (tabs) {
+  const now = Date.now()
+  return tabs.filter(tab =>
+    !tab.pinned &&
+    !tab.active &&
+    (now - tab.lastActivedAt) > config.IDLE_TIME
+  )
 }
 
 function getAllTabs (windowId) {
@@ -144,26 +157,6 @@ function getAllTabs (windowId) {
       }
     })
   }
-}
-
-function getUnwantedTabs (tabs) {
-  return tabs.filter(tab => !isWantedTab(tab))
-}
-
-function getWantedTabs (tabs) {
-  return tabs.filter(isWantedTab)
-}
-
-function isWantedTab (tab) {
-  return isCandidate(tab) || isFreshTab(tab)
-}
-
-function isCandidate (tab) {
-  return tab.active || tab.highlighted || tab.pinned
-}
-
-function isFreshTab (tab) {
-  return tab.lastActivedAt && (new Date() - tab.lastActivedAt) < config.IDLE_TIME
 }
 
 function getPopupPageData (windowId) {

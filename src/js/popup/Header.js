@@ -36,7 +36,10 @@ class Header extends Component {
   render ({idleTime}) {
     return (
       <Wrapper>
-        <PrimaryButton onMouseEnter={this.handleByTimeButtonHover} onMouseLeave={this.props.onLeaveButton}>
+        <PrimaryButton
+          onMouseEnter={this.handleByTimeButtonHover} onMouseLeave={this.props.onLeaveButton}
+          onClick={this.props.onClickButton}
+        >
           <ButtonHint>close the tabs idle for</ButtonHint>
           <Strong>{humanDuration(idleTime)}</Strong>
         </PrimaryButton>
