@@ -5,9 +5,7 @@ function saveOptions () {
   }, function () {
     const status = document.getElementById('hint')
     status.textContent = 'Options saved.'
-    setTimeout(function () {
-      status.textContent = ''
-    }, 750)
+    window.close()
   })
 }
 
