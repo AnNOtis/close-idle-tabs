@@ -6,7 +6,7 @@
     "build": "NODE_ENV=production node utils/build.js",
     "start": "node utils/webserver.js",
     "test": "ava --color",
-    "zip": "yarn build && zip build.zip build"
+    "zip": "yarn build && zip -r build.zip build"
   },
   "ava": {
     "require": [
