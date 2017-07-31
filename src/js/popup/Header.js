@@ -32,7 +32,7 @@ class Header extends Component {
     return (
       <Wrapper>
         <PrimaryButton
-          onMouseEnter={onEnterButton}
+          onMouseOver={onEnterButton}
           onMouseLeave={onLeaveButton}
           onClick={onClickButton}
           disabled={idleTabsID.length === 0}
