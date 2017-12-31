@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h, Component } from 'preact'
 import { maybePlural, humanDuration } from '../utils/index'
 import { linkToOptions } from '../popup'

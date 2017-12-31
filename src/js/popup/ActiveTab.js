@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h, Component } from 'preact'
 import ActiveTabList from './ActiveTabList'
 

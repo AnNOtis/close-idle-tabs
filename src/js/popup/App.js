@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h, Component } from 'preact'
 import Header from './Header'
 import Main from './Main'

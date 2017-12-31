@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h, Component } from 'preact'
 import styled from 'styled-components'
 import TabList from './TabList'

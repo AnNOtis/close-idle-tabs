@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h, Component } from 'preact'
 import { humanDuration } from '../utils/index'
 import styled, { css, keyframes } from 'styled-components'

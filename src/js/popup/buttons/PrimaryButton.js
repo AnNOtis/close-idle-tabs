@@ -1,3 +1,4 @@
+/** @jsx h */
 import v from 'css/variables'
 import Button from './Button'
 import { css } from 'styled-components'
