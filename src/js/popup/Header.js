@@ -3,6 +3,7 @@ import { h, Component } from 'preact'
 import styled from 'styled-components'
 import generateCancelButton from './MissionButton/generateCancelButton'
 import generateKeepButton from './MissionButton/generateKeepButton'
+import Slider from './Slider'
 
 const FIVE_MIN_MS = 5 * 60 * 1000
 // const FIFTEEN_MIN_MS = 15 * 60 * 1000
@@ -22,22 +23,40 @@ const Wrapper = styled.div`
   box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
 `
 
+const ButtonWrapper = styled.div`
+  padding: 10px;
+`
+
 class Header extends Component {
   render ({tabs, onEnterButton, onLeaveButton, onClickButton}) {
     return (
       <Wrapper>
-        <FiveMinCancelButton
-          onMouseOver={onEnterButton}
-          onMouseLeave={onLeaveButton}
-          onClick={onClickButton}
-          disabled={false}
-        />
-        <KeepFiveTabsButton
-          onMouseOver={onEnterButton}
-          onMouseLeave={onLeaveButton}
-          onClick={onClickButton}
-          disabled={false}
-        />
+        <Slider>
+          <ButtonWrapper><FiveMinCancelButton
+            onMouseOver={onEnterButton}
+            onMouseLeave={onLeaveButton}
+            onClick={onClickButton}
+            disabled={false}
+          /></ButtonWrapper>
+          <ButtonWrapper><KeepFiveTabsButton
+            onMouseOver={onEnterButton}
+            onMouseLeave={onLeaveButton}
+            onClick={onClickButton}
+            disabled={false}
+          /></ButtonWrapper>
+          <ButtonWrapper><KeepFiveTabsButton
+            onMouseOver={onEnterButton}
+            onMouseLeave={onLeaveButton}
+            onClick={onClickButton}
+            disabled={false}
+          /></ButtonWrapper>
+          <ButtonWrapper><KeepFiveTabsButton
+            onMouseOver={onEnterButton}
+            onMouseLeave={onLeaveButton}
+            onClick={onClickButton}
+            disabled={false}
+          /></ButtonWrapper>
+        </Slider>
       </Wrapper>
     )
   }
