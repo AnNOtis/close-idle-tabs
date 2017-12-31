@@ -8,16 +8,14 @@ class App extends Component {
   constructor () {
     super()
     this.getData = this.getData.bind(this)
-    this.removeIdleTabs = this.removeIdleTabs.bind(this)
-    this.setIdleTabs = this.setIdleTabs.bind(this)
-    this.idleTabsID = this.idleTabsID.bind(this)
-    this.highlightIdleTabs = this.highlightIdleTabs.bind(this)
-    this.cancelHighlightIdleTabs = this.cancelHighlightIdleTabs.bind(this)
+    this.markIdleTabs = this.markIdleTabs.bind(this)
+    this.unmarkIdleTabs = this.unmarkIdleTabs.bind(this)
+    this.cancelIdleTabs = this.cancelIdleTabs.bind(this)
 
     this.state = {
       currentTime: Date.now(),
-      isHighlightingIdleTabs: false,
-      idleTabsID: []
+      idleTabIDs: [],
+      data: null
     }
   }
 
@@ -31,27 +29,39 @@ class App extends Component {
     this.cancelClock()
   }
 
-  render (_, {data, currentTime, idleTabsID, isHighlightingIdleTabs}) {
+  render (_, {data, currentTime, idleTabIDs}) {
     if (!data) return <div>loading...</div>
 
     return (
       <div>
         <Header
           tabs={data.tabs}
-          idleTime={data.IDLE_TIME}
-          idleTabsID={idleTabsID}
-          onEnterButton={this.highlightIdleTabs}
-          onLeaveButton={this.cancelHighlightIdleTabs}
-          onClickButton={this.removeIdleTabs}
+          onEnterButton={this.markIdleTabs}
+          onLeaveButton={this.unmarkIdleTabs}
+          onClickButton={this.cancelIdleTabs}
         />
         <Main
           currentTime={currentTime}
           tabs={data.tabs}
-          isHighlightingIdleTabs={isHighlightingIdleTabs}
-          idleTabsID={idleTabsID}
+          idleTabIDs={idleTabIDs}
         />
       </div>
     )
+  }
+
+  markIdleTabs (filter) {
+    this.setState({ idleTabIDs: filter(this.state.data.tabs).map(t => t.id) })
+  }
+
+  unmarkIdleTabs () {
+    this.setState({ idleTabIDs: [] })
+  }
+
+  cancelIdleTabs () {
+    this.tabDataChannel.postMessage({
+      what: 'closeIdleTabs',
+      idleTabIDs: this.state.idleTabIDs
+    })
   }
 
   getData () {
@@ -76,39 +86,12 @@ class App extends Component {
   setupClock () {
     this._timer = setInterval(() => {
       const currentTime = Date.now()
-      this.setState({ currentTime, idleTabsID: this.idleTabsID(currentTime) })
+      this.setState({ currentTime })
     }, 1000)
   }
 
   cancelClock () {
     clearInterval(this._timer)
-  }
-
-  setIdleTabs () {
-    this.setState({ idleTabsID: this.idleTabsID() })
-  }
-
-  idleTabsID (now = null) {
-    const data = this.state.data
-
-    return data.tabs.filter(tab => {
-      if (tab.active) return false
-      if (tab.pinned) return false
-      return ((now || this.state.currentTime) - tab.lastActivedAt) > data.IDLE_TIME
-    })
-    .map(tab => tab.id)
-  }
-
-  highlightIdleTabs () {
-    this.setState({ isHighlightingIdleTabs: true })
-  }
-
-  cancelHighlightIdleTabs () {
-    this.setState({ isHighlightingIdleTabs: false })
-  }
-
-  removeIdleTabs () {
-    this.tabDataChannel.postMessage({ what: 'closeIdleTabs' })
   }
 }
 

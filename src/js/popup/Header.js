@@ -1,9 +1,15 @@
 /** @jsx h */
 import { h, Component } from 'preact'
-import { humanDuration } from '../utils/index'
-import PrimaryButton from './buttons/PrimaryButton'
 import styled from 'styled-components'
-import v from 'css/variables'
+import generateCancelButton from './MissionButton/generateCancelButton'
+import generateKeepButton from './MissionButton/generateKeepButton'
+
+const FIVE_MIN_MS = 5 * 60 * 1000
+// const FIFTEEN_MIN_MS = 15 * 60 * 1000
+// const THIRTY_MIN_MS = 30 * 60 * 1000
+
+const FiveMinCancelButton = generateCancelButton(FIVE_MIN_MS)
+const KeepFiveTabsButton = generateKeepButton(5)
 
 const Wrapper = styled.div`
   position: fixed;
@@ -16,31 +22,22 @@ const Wrapper = styled.div`
   box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
 `
 
-const Strong = styled.div`
-  font-size: 20px;
-  line-height: 1.4em;
-  font-weight: bolder;
-  font-family: ${v.fontHeader};
-`
-const ButtonHint = styled.div`
-  font-size: 12px;
-  color: #555;
-  text-align: center;
-`
-
 class Header extends Component {
-  render ({idleTime, idleTabsID, onEnterButton, onLeaveButton, onClickButton}) {
+  render ({tabs, onEnterButton, onLeaveButton, onClickButton}) {
     return (
       <Wrapper>
-        <PrimaryButton
+        <FiveMinCancelButton
           onMouseOver={onEnterButton}
           onMouseLeave={onLeaveButton}
           onClick={onClickButton}
-          disabled={idleTabsID.length === 0}
-        >
-          <ButtonHint>close tabs idle for</ButtonHint>
-          <Strong>{humanDuration(idleTime)}</Strong>
-        </PrimaryButton>
+          disabled={false}
+        />
+        <KeepFiveTabsButton
+          onMouseOver={onEnterButton}
+          onMouseLeave={onLeaveButton}
+          onClick={onClickButton}
+          disabled={false}
+        />
       </Wrapper>
     )
   }

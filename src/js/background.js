@@ -54,7 +54,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     if (msg.what === 'data') {
       pushData()
     } else if (msg.what === 'closeIdleTabs') {
-      closeIdleTabs()
+      closeIdleTabs(msg.idleTabIDs)
     }
   }
 
@@ -64,8 +64,8 @@ chrome.runtime.onConnect.addListener(function (port) {
     })
   }
 
-  function closeIdleTabs () {
-    closeIdleTabsByWindow(windowId)
+  function closeIdleTabs (idleTabIDs) {
+    closeIdleTabsByWindow(windowId, idleTabIDs)
   }
 })
 
@@ -125,19 +125,13 @@ function removeTabRecord (id) {
   pushDataToAllPages()
 }
 
-function closeIdleTabsByWindow (windowId) {
+function closeIdleTabsByWindow (windowId, idleTabIDs) {
   return getAllTabs(windowId)
-    .then(getIdleTabs)
-    .then(tabs => chrome.tabs.remove(tabs.map(tab => tab.id)))
-}
-
-function getIdleTabs (tabs) {
-  const now = Date.now()
-  return tabs.filter(tab =>
-    !tab.pinned &&
-    !tab.active &&
-    (now - tab.lastActivedAt) > config.IDLE_TIME
-  )
+    .then(tabs => chrome.tabs.remove(
+      tabs
+        .filter(tab => idleTabIDs.indexOf(tab.id) !== -1)
+        .map(tab => tab.id)
+    ))
 }
 
 function getAllTabs (windowId) {

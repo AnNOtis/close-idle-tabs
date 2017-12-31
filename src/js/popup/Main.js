@@ -8,14 +8,13 @@ const Wrapper = styled.div`
 `
 
 class Main extends Component {
-  render ({tabs, idleTabsID, currentTime, isHighlightingIdleTabs}) {
+  render ({tabs, idleTabIDs, currentTime}) {
     return (
       <Wrapper>
         <TabList
           currentTime={currentTime}
           tabs={tabs}
-          idleTabsID={idleTabsID}
-          isHighlightingIdleTabs={isHighlightingIdleTabs}
+          idleTabIDs={idleTabIDs}
         />
       </Wrapper>
     )

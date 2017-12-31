@@ -15,7 +15,7 @@ const Li = styled.li`
 `
 
 class TabList extends Component {
-  render ({ tabs, idleTabsID, isHighlightingIdleTabs, currentTime }) {
+  render ({ tabs, idleTabIDs, currentTime }) {
     return (
       <Ul>
         {this.sortedTabs().map(tab => (
@@ -24,9 +24,7 @@ class TabList extends Component {
               key={tab.id}
               tab={tab}
               currentTime={currentTime}
-              showCloseIcon={
-                isHighlightingIdleTabs && idleTabsID.indexOf(tab.id) !== -1
-              }
+              showCloseIcon={idleTabIDs.indexOf(tab.id) !== -1}
             />
           </Li>
         ))}
