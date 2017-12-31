@@ -3,6 +3,7 @@ import { h, Component } from 'preact'
 import PrimaryButton from '../buttons/PrimaryButton'
 import styled from 'styled-components'
 import v from 'css/variables'
+import { maybePlural } from '../../utils/index'
 
 const Strong = styled.div`
   font-size: 20px;
@@ -33,9 +34,11 @@ const generateKeepButton = (remainedTabsNumber) => (
     filter (tabs) {
       const removableTabs = getRemovableTabs(tabs)
       const fixedTabsNumber = tabs.length - removableTabs.length
-      if (fixedTabsNumber >= remainedTabsNumber) return []
-
-      return removableTabs.slice(remainedTabsNumber - fixedTabsNumber)
+      if (fixedTabsNumber >= remainedTabsNumber) {
+        return removableTabs
+      } else {
+        return removableTabs.slice(remainedTabsNumber - fixedTabsNumber)
+      }
     }
 
     handleMouseOver () {
@@ -56,8 +59,8 @@ const generateKeepButton = (remainedTabsNumber) => (
         onClick={this.handleClick}
         disabled={disabled}
       >
-        <ButtonHint>leave tabs for first</ButtonHint>
-        <Strong>{remainedTabsNumber}</Strong>
+        <ButtonHint>keep recent</ButtonHint>
+        <Strong>{remainedTabsNumber} {maybePlural(remainedTabsNumber, 'tab')}</Strong>
       </PrimaryButton>
     }
   }

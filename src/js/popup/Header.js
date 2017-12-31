@@ -6,10 +6,14 @@ import generateKeepButton from './MissionButton/generateKeepButton'
 import Slider from './Slider'
 
 const FIVE_MIN_MS = 5 * 60 * 1000
-// const FIFTEEN_MIN_MS = 15 * 60 * 1000
-// const THIRTY_MIN_MS = 30 * 60 * 1000
+const FIFTEEN_MIN_MS = 15 * 60 * 1000
+const THIRTY_MIN_MS = 30 * 60 * 1000
 
 const FiveMinCancelButton = generateCancelButton(FIVE_MIN_MS)
+const FifteenMinCancelButton = generateCancelButton(FIFTEEN_MIN_MS)
+const ThirtyMinCancelButton = generateCancelButton(THIRTY_MIN_MS)
+const KeepOneTabsButton = generateKeepButton(1)
+const KeepThreeTabsButton = generateKeepButton(3)
 const KeepFiveTabsButton = generateKeepButton(5)
 
 const Wrapper = styled.div`
@@ -17,7 +21,7 @@ const Wrapper = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  padding: 16px 12px;
+  padding: 8px 12px;
   background-color: white;
   z-index: 9999;
   box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
@@ -32,25 +36,37 @@ class Header extends Component {
     return (
       <Wrapper>
         <Slider>
+          <ButtonWrapper><KeepOneTabsButton
+            onMouseOver={onEnterButton}
+            onMouseLeave={onLeaveButton}
+            onClick={onClickButton}
+            disabled={false}
+          /></ButtonWrapper>
+          <ButtonWrapper><KeepThreeTabsButton
+            onMouseOver={onEnterButton}
+            onMouseLeave={onLeaveButton}
+            onClick={onClickButton}
+            disabled={false}
+          /></ButtonWrapper>
+          <ButtonWrapper><KeepFiveTabsButton
+            onMouseOver={onEnterButton}
+            onMouseLeave={onLeaveButton}
+            onClick={onClickButton}
+            disabled={false}
+          /></ButtonWrapper>
           <ButtonWrapper><FiveMinCancelButton
             onMouseOver={onEnterButton}
             onMouseLeave={onLeaveButton}
             onClick={onClickButton}
             disabled={false}
           /></ButtonWrapper>
-          <ButtonWrapper><KeepFiveTabsButton
+          <ButtonWrapper><FifteenMinCancelButton
             onMouseOver={onEnterButton}
             onMouseLeave={onLeaveButton}
             onClick={onClickButton}
             disabled={false}
           /></ButtonWrapper>
-          <ButtonWrapper><KeepFiveTabsButton
-            onMouseOver={onEnterButton}
-            onMouseLeave={onLeaveButton}
-            onClick={onClickButton}
-            disabled={false}
-          /></ButtonWrapper>
-          <ButtonWrapper><KeepFiveTabsButton
+          <ButtonWrapper><ThirtyMinCancelButton
             onMouseOver={onEnterButton}
             onMouseLeave={onLeaveButton}
             onClick={onClickButton}
