@@ -1,10 +1,10 @@
-var webpack = require('webpack'),
-  path = require('path'),
-  fileSystem = require('fs'),
-  env = require('./utils/env'),
-  HtmlWebpackPlugin = require('html-webpack-plugin'),
-  WriteFilePlugin = require('write-file-webpack-plugin'),
-  ExtractTextPlugin = require('extract-text-webpack-plugin')
+const webpack = require('webpack')
+const path = require('path')
+const fileSystem = require('fs')
+const env = require('./utils/env')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const WriteFilePlugin = require('write-file-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 // load the secrets
 var alias = {

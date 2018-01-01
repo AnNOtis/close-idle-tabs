@@ -1,7 +1,6 @@
-var manifest = require('../src/manifest.json'),
-  fileSystem = require('fs'),
-  path = require('path'),
-  env = require('./env')
+const manifest = require('../src/manifest.json')
+const fileSystem = require('fs')
+const path = require('path')
 
 // generates the manifest file using the package.json informations
 manifest.description = process.env.npm_package_description

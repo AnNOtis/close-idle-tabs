@@ -174,10 +174,3 @@ function getStorage (target) {
     }
   })
 }
-
-function tap (title = 'tap') {
-  return (v) => {
-    console.log(title, v)
-    return v
-  }
-}

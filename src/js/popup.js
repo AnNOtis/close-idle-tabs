@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h, render } from 'preact'
 
 import '../css/popup.sass'
