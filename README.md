@@ -9,15 +9,15 @@
 ## ScreenShot
 
 ### 1.
-<img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/demo.gif" width="240" />
+<img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/demo.gif" />
 
 ### 2.
 
-<img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/screenshot1.png" width="240" />
+<img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/screenshot1.png" width="360" />
 
 ### 3.
 
-<img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/screenshot2.png" width="240" />
+<img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/screenshot2.png" width="360" />
 
 ## TODOs
 
