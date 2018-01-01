@@ -21,7 +21,7 @@ function getRemovableTabs (tabs) {
   return tabs.filter(tab => !tab.pinned)
 }
 
-const generateKeepButton = (remainedTabsNumber) => (
+const generateKeepButton = (remainedTabsNumber) => {
   class KeepButton extends Component {
     constructor (props) {
       super(props)
@@ -64,6 +64,8 @@ const generateKeepButton = (remainedTabsNumber) => (
       </PrimaryButton>
     }
   }
-)
+  KeepButton.displayName = `KeepButton${remainedTabsNumber}`
+  return KeepButton
+}
 
 export default generateKeepButton

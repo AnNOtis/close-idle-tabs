@@ -16,6 +16,26 @@ const KeepOneTabsButton = generateKeepButton(1)
 const KeepThreeTabsButton = generateKeepButton(3)
 const KeepFiveTabsButton = generateKeepButton(5)
 
+export const DEFAULT_MISSION = 'KeepButton5'
+
+const MISSION_MAPPING = {
+  'KeepButton1': KeepOneTabsButton,
+  'KeepButton3': KeepThreeTabsButton,
+  'KeepButton5': KeepFiveTabsButton,
+  'CancelButton300000': FiveMinCancelButton,
+  'CancelButton900000': FifteenMinCancelButton,
+  'CancelButton1800000': ThirtyMinCancelButton
+}
+
+const MISSIONS = [
+  'KeepButton1',
+  'KeepButton3',
+  'KeepButton5',
+  'CancelButton300000',
+  'CancelButton900000',
+  'CancelButton1800000'
+]
+
 const Wrapper = styled.div`
   position: fixed;
   top: 0;
@@ -32,47 +52,68 @@ const ButtonWrapper = styled.div`
 `
 
 class Header extends Component {
-  render ({tabs, onEnterButton, onLeaveButton, onClickButton}) {
+  constructor () {
+    super()
+    this.handleSliderIndexChange = this.handleSliderIndexChange.bind(this)
+    this.state = {
+      isLoaded: false
+    }
+  }
+  componentDidMount () {
+    this.loadDefaultMission()
+  }
+
+  loadDefaultMission () {
+    chrome.storage.sync.get({defaultMission: DEFAULT_MISSION}, ({defaultMission}) => {
+      this.setState({
+        isLoaded: true,
+        defaultMission
+      })
+    })
+  }
+
+  handleSliderIndexChange (index) {
+    this.saveDefaultMission(MISSIONS[index])
+  }
+
+  saveDefaultMission (defaultMission) {
+    chrome.storage.sync.set({ defaultMission })
+  }
+
+  renderMissions () {
+    const {
+      onEnterButton: onMouseOver,
+      onLeaveButton: onMouseLeave,
+      onClickButton: onClick
+    } = this.props
+
+    return MISSIONS.map(mission => (
+      <ButtonWrapper>
+        {h(
+          MISSION_MAPPING[mission],
+          {
+            onMouseOver,
+            onMouseLeave,
+            onClick,
+            disabled: false
+          }
+        )}
+      </ButtonWrapper>
+    ))
+  }
+
+  render () {
     return (
       <Wrapper>
-        <Slider>
-          <ButtonWrapper><KeepOneTabsButton
-            onMouseOver={onEnterButton}
-            onMouseLeave={onLeaveButton}
-            onClick={onClickButton}
-            disabled={false}
-          /></ButtonWrapper>
-          <ButtonWrapper><KeepThreeTabsButton
-            onMouseOver={onEnterButton}
-            onMouseLeave={onLeaveButton}
-            onClick={onClickButton}
-            disabled={false}
-          /></ButtonWrapper>
-          <ButtonWrapper><KeepFiveTabsButton
-            onMouseOver={onEnterButton}
-            onMouseLeave={onLeaveButton}
-            onClick={onClickButton}
-            disabled={false}
-          /></ButtonWrapper>
-          <ButtonWrapper><FiveMinCancelButton
-            onMouseOver={onEnterButton}
-            onMouseLeave={onLeaveButton}
-            onClick={onClickButton}
-            disabled={false}
-          /></ButtonWrapper>
-          <ButtonWrapper><FifteenMinCancelButton
-            onMouseOver={onEnterButton}
-            onMouseLeave={onLeaveButton}
-            onClick={onClickButton}
-            disabled={false}
-          /></ButtonWrapper>
-          <ButtonWrapper><ThirtyMinCancelButton
-            onMouseOver={onEnterButton}
-            onMouseLeave={onLeaveButton}
-            onClick={onClickButton}
-            disabled={false}
-          /></ButtonWrapper>
-        </Slider>
+        {
+          this.state.isLoaded &&
+          <Slider
+            defaultIndex={MISSIONS.indexOf(this.state.defaultMission)}
+            onIndexChange={this.handleSliderIndexChange}
+          >
+            {this.renderMissions()}
+          </Slider>
+        }
       </Wrapper>
     )
   }

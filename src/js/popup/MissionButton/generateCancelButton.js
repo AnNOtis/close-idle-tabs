@@ -21,7 +21,7 @@ const ButtonHint = styled.div`
   text-align: center;
 `
 
-const generateCancelButton = (idleThreshold) => (
+const generateCancelButton = (idleThreshold) => {
   class CancelButton extends Component {
     constructor (props) {
       super(props)
@@ -59,5 +59,7 @@ const generateCancelButton = (idleThreshold) => (
       </PrimaryButton>
     }
   }
-)
+  CancelButton.displayName = `CancelButton${idleThreshold}`
+  return CancelButton
+}
 export default generateCancelButton

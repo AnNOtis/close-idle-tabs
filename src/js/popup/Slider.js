@@ -37,7 +37,6 @@ const Content = styled.div`
 `
 
 const River = styled.div`
-  transition: transform 0.5s;
   ::after
     content: "";
     display: table;
@@ -45,12 +44,13 @@ const River = styled.div`
 `
 
 class Slider extends Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.handleRightArrowClick = this.handleRightArrowClick.bind(this)
     this.handleLeftArrowClick = this.handleLeftArrowClick.bind(this)
     this.state = {
-      index: 0
+      index: this.props.defaultIndex || 0,
+      isAnimated: false // keep false until clicking arrow
     }
   }
 
@@ -60,16 +60,20 @@ class Slider extends Component {
     })
   }
 
+  changeIndex (index) {
+    this.setState({ index, isAnimated: true }, () => this.props.onIndexChange(index))
+  }
+
   handleRightArrowClick () {
     let nextIndex = this.state.index + 1
     if (nextIndex === this.props.children.length) { nextIndex = 0 }
-    this.setState({ index: nextIndex })
+    this.changeIndex(nextIndex)
   }
 
   handleLeftArrowClick () {
     let nextIndex = this.state.index - 1
     if (nextIndex < 0) { nextIndex = this.props.children.length - 1 }
-    this.setState({ index: nextIndex })
+    this.changeIndex(nextIndex)
   }
 
   renderRiver () {
@@ -78,11 +82,11 @@ class Slider extends Component {
       index
     } = this.state
     const riverWidth = contentWidth * (this.props.children.length || 1)
-
     return (
       <River style={{
         width: riverWidth,
-        transform: `translate3d(-${contentWidth * index}px, 0, 0)`
+        transform: `translate3d(-${contentWidth * index}px, 0, 0)`,
+        transition: this.state.isAnimated && 'transform 0.5s'
       }}>
         {this.props.children.map((child) => (
           <div style={{

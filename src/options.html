@@ -5,12 +5,14 @@
 </head>
 <body>
   <div>
-    How long can tab be idle?
-    <select id="idle-time" style="float: right;">
-      <option value="300000">5 mins</option>
-      <option value="600000">10 mins</option>
-      <option value="1800000">30 mins</option>
-      <option value="3600000">1 hour</option>
+    Default Mission:
+    <select id="defaultMission" style="float: right;">
+      <option value="KeepButton1">keep recent 1 tab</option>
+      <option value="KeepButton3">keep recent 3 tabs</option>
+      <option value="KeepButton5">keep recent 5 tabs</option>
+      <option value="CancelButton300000">close tabs idle for 5 mins</option>
+      <option value="CancelButton900000">close tabs idle for 15 mins</option>
+      <option value="CancelButton1800000">close tabs idle for 30 mins</option>
     </select>
   </div>
   <div style="margin-top: 50px; text-align: right; border-top: 1px solid #DDD; padding-top: 12px;">

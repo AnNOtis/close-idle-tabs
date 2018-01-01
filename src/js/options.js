@@ -1,19 +1,21 @@
+import { DEFAULT_MISSION } from './popup/Header'
+
 function saveOptions () {
-  const idleTime = parseInt(document.getElementById('idle-time').value)
+  const defaultMission = document.getElementById('defaultMission').value
+  console.log(defaultMission)
   chrome.storage.sync.set({
-    idleTime
+    defaultMission
   }, function () {
     const status = document.getElementById('hint')
     status.textContent = 'Options saved.'
-    window.close()
   })
 }
 
 function restoreOptions () {
   chrome.storage.sync.get({
-    idleTime: 5000 * 60
+    defaultMission: DEFAULT_MISSION
   }, function (items) {
-    document.getElementById('idle-time').value = items.idleTime
+    document.getElementById('defaultMission').value = items.defaultMission
   })
 }
 
