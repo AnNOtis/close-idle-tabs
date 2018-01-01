@@ -1,6 +1,6 @@
 {
   "name": "close-idle-tabs",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Press a button to close inactive tabs",
   "scripts": {
     "build": "NODE_ENV=production node utils/build.js",
