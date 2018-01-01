@@ -8,20 +8,17 @@
 
 ## ScreenShot
 
+### 1.
 <img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/demo.gif" width="240" />
+
+### 2.
+
+<img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/screenshot1.png" width="240" />
+
+### 3.
+
+<img src="https://raw.githubusercontent.com/AnNOtis/close-idle-tabs/master/misc/screenshot2.png" width="240" />
 
 ## TODOs
 
-- improve activity detect
-  - [x] add thresdhold
-  - [x] calculate differet window in seperated queue
-  - [x] link popup page's minutes to options page
-  - [x] improve ui to show inactive tabs
-  - [ ] treat new tab as an idle tab
-  - [ ] add shortcut
-- Options Page
-  - [x] idle time config
-- Browser Action
-  - [x] icon
-  - [x] badge: displaying idle tabs count
-  - [x] popup page: displaying tabs with idle info & a big button to close idle tabs
+- [ ] add shortcut
