@@ -33,12 +33,7 @@ const generateKeepButton = (remainedTabsNumber) => {
 
     filter (tabs) {
       const removableTabs = getRemovableTabs(tabs)
-      const fixedTabsNumber = tabs.length - removableTabs.length
-      if (fixedTabsNumber >= remainedTabsNumber) {
-        return removableTabs
-      } else {
-        return removableTabs.slice(remainedTabsNumber - fixedTabsNumber)
-      }
+      return removableTabs.slice(remainedTabsNumber)
     }
 
     handleMouseOver () {
