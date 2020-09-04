@@ -41,7 +41,7 @@
     "classnames": "^2.2.5",
     "eslint-config-standard-jsx": "^4.0.2",
     "extract-text-webpack-plugin": "2.1.2",
-    "node-sass": "^4.7.2",
+    "node-sass": "^4.13.1",
     "ovv": "^1.0.0",
     "preact": "^8.2.1",
     "preact-compat": "^3.16.0",
